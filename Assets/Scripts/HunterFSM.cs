@@ -10,7 +10,7 @@ public class HunterFSM : MonoBehaviour
     public Transform[] waypoints; // Puntos de patrullaje
     public float speed = 3f;
     public float detectionRange = 5f; // Rango de detección de los boids
-    public float energy = 100f;
+    public float energy;
     public float energyDecayRate = 0.5f;
     public float rechargeRate = 5f;
     public Transform rechargeStation; // Lugar donde se recarga energía
