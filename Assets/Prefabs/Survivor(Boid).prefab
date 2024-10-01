@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6776379599480088576}
   - component: {fileID: 463442266326941446}
   - component: {fileID: 3161966910331254609}
+  - component: {fileID: 6935188880827265580}
   m_Layer: 0
   m_Name: Survivor(Boid)
   m_TagString: Untagged
@@ -127,3 +128,23 @@ MonoBehaviour:
   separationStrength: 1
   alignmentStrength: 1
   velocity: {x: 0, y: 0}
+--- !u!114 &6935188880827265580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4988309978905656644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb00c291b32b3fe4a92351d675d0831d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cazador: {fileID: 0}
+  detectionRange: 10
+  cazadorLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
