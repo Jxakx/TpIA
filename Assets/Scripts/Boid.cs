@@ -64,6 +64,9 @@ public class Boid : MonoBehaviour
             nearestFood = null; // Para evitar que intente seguir la comida destruida
             Debug.Log("Comida destruida al acercarse");
         }
+
+        // Forzar alejamiento de los bordes del mapa
+        ForceAwayFromMapEdges();
     }
 
     void UpdateBoidBehavior()
@@ -194,5 +197,36 @@ public class Boid : MonoBehaviour
     Vector3 FleeFromHunter()
     {
         return (transform.position - hunter.position).normalized;
+    }
+
+    // Método para alejar a los boids de los límites del mapa
+    void ForceAwayFromMapEdges()
+    {
+        float edgeThreshold = 5f;  // Distancia mínima para empezar a aplicar la repulsión en los bordes
+        Vector3 repulsionForce = Vector3.zero;
+
+        if (transform.position.x > mapWidth / 2 - edgeThreshold)
+        {
+            repulsionForce += Vector3.left;  // Repulsión hacia la izquierda
+        }
+        else if (transform.position.x < -mapWidth / 2 + edgeThreshold)
+        {
+            repulsionForce += Vector3.right;  // Repulsión hacia la derecha
+        }
+
+        if (transform.position.z > mapDepth / 2 - edgeThreshold)
+        {
+            repulsionForce += Vector3.back;  // Repulsión hacia abajo (atrás)
+        }
+        else if (transform.position.z < -mapDepth / 2 + edgeThreshold)
+        {
+            repulsionForce += Vector3.forward;  // Repulsión hacia arriba (adelante)
+        }
+
+        // Aplicar la fuerza de repulsión si está cerca de los bordes
+        if (repulsionForce != Vector3.zero)
+        {
+            velocity += repulsionForce.normalized * speed * 0.5f;  // Ajusta la magnitud de la repulsión según sea necesario
+        }
     }
 }
