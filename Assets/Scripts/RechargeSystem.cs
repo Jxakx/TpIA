@@ -11,6 +11,7 @@ public class RechargeSystem : MonoBehaviour
     public Transform rechargePoint;  // Punto de recarga en el mapa
     private bool isRecharging = false;  // Estado del cazador, si está recargando o no
     private Vector3 initialPosition;  // Posición inicial del cazador para restaurar tras la recarga
+    private bool cazadorDentroDelRango = false; // Verifica si el cazador está en el rango de recarga
 
     void Start()
     {
@@ -45,22 +46,33 @@ public class RechargeSystem : MonoBehaviour
             yield return null;
         }
 
-        // Cuando llega al punto de recarga, comienza a recargar energía
+        // Cuando llega al punto de recarga, marca que el cazador está en el rango
+        cazadorDentroDelRango = true;
         yield return StartCoroutine(RechargeEnergy());
     }
 
     // Método para recargar la energía
     IEnumerator RechargeEnergy()
     {
-        while (currentEnergy < maxEnergy)
+        while (currentEnergy < maxEnergy && cazadorDentroDelRango)
         {
             currentEnergy += rechargeRate * Time.deltaTime;
             yield return null;
         }
 
-        // Cuando termina de recargar, vuelve a su posición inicial
+        // Cuando termina de recargar o se aleja, vuelve a su posición inicial
         isRecharging = false;
+        cazadorDentroDelRango = false;  // El cazador ya no está recargando
         transform.position = initialPosition;  // Vuelve a su posición de patrullaje
+    }
+
+    // Método para detener la recarga si el cazador se aleja demasiado del punto de recarga
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Hunter"))  // Asegúrate de que el cazador tenga este tag
+        {
+            cazadorDentroDelRango = false;  // El cazador salió del rango de recarga
+        }
     }
 
     // Método para visualizar el punto de recarga

@@ -17,60 +17,26 @@ public class MapLimitsRaycast : MonoBehaviour
 
     void CheckMapBounds()
     {
-        RaycastHit hitLeft, hitRight, hitUp, hitDown, hitForward, hitBackward;
+        RaycastHit hit;
 
-        // Raycast para la izquierda
-        if (Physics.Raycast(transform.position, Vector3.left, out hitLeft, mapWidth, limitLayer))
+        // Raycast para la izquierda y derecha
+        if (Physics.Raycast(transform.position, Vector3.left, out hit, mapWidth / 2f, limitLayer))
         {
-            if (hitLeft.distance < mapWidth / 2f)
-            {
-                transform.position = new Vector3(hitLeft.point.x + 0.1f, transform.position.y, transform.position.z);
-            }
+            transform.position = new Vector3(hit.point.x + 0.1f, transform.position.y, transform.position.z);
+        }
+        if (Physics.Raycast(transform.position, Vector3.right, out hit, mapWidth / 2f, limitLayer))
+        {
+            transform.position = new Vector3(hit.point.x - 0.1f, transform.position.y, transform.position.z);
         }
 
-        // Raycast para la derecha
-        if (Physics.Raycast(transform.position, Vector3.right, out hitRight, mapWidth, limitLayer))
+        // Raycast hacia adelante y atrás
+        if (Physics.Raycast(transform.position, Vector3.forward, out hit, mapDepth / 2f, limitLayer))
         {
-            if (hitRight.distance < mapWidth / 2f)
-            {
-                transform.position = new Vector3(hitRight.point.x - 0.1f, transform.position.y, transform.position.z);
-            }
+            transform.position = new Vector3(transform.position.x, transform.position.y, hit.point.z - 0.1f);
         }
-
-        // Raycast hacia arriba
-        if (Physics.Raycast(transform.position, Vector3.up, out hitUp, mapHeight, limitLayer))
+        if (Physics.Raycast(transform.position, Vector3.back, out hit, mapDepth / 2f, limitLayer))
         {
-            if (hitUp.distance < mapHeight / 2f)
-            {
-                transform.position = new Vector3(transform.position.x, hitUp.point.y - 0.1f, transform.position.z);
-            }
-        }
-
-        // Raycast hacia abajo
-        if (Physics.Raycast(transform.position, Vector3.down, out hitDown, mapHeight, limitLayer))
-        {
-            if (hitDown.distance < mapHeight / 2f)
-            {
-                transform.position = new Vector3(transform.position.x, hitDown.point.y + 0.1f, transform.position.z);
-            }
-        }
-
-        // Raycast hacia adelante
-        if (Physics.Raycast(transform.position, Vector3.forward, out hitForward, mapDepth, limitLayer))
-        {
-            if (hitForward.distance < mapDepth / 2f)
-            {
-                transform.position = new Vector3(transform.position.x, transform.position.y, hitForward.point.z - 0.1f);
-            }
-        }
-
-        // Raycast hacia atrás
-        if (Physics.Raycast(transform.position, Vector3.back, out hitBackward, mapDepth, limitLayer))
-        {
-            if (hitBackward.distance < mapDepth / 2f)
-            {
-                transform.position = new Vector3(transform.position.x, transform.position.y, hitBackward.point.z + 0.1f);
-            }
+            transform.position = new Vector3(transform.position.x, transform.position.y, hit.point.z + 0.1f);
         }
     }
 
