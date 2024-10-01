@@ -16,6 +16,7 @@ public class HunterFSM : MonoBehaviour
     public Transform rechargeStation;
 
     private int currentWaypointIndex = 0;
+    private bool movingForward = true;  // Variable para saber si está avanzando o retrocediendo en los waypoints
 
     void Update()
     {
@@ -50,7 +51,25 @@ public class HunterFSM : MonoBehaviour
 
         if (Vector3.Distance(transform.position, targetWaypoint.position) < 1f)
         {
-            currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
+            // Si está avanzando, incrementa el índice, si está retrocediendo, decrementa
+            if (movingForward)
+            {
+                currentWaypointIndex++;
+                if (currentWaypointIndex >= waypoints.Length)  // Si llega al último waypoint, cambia de dirección
+                {
+                    currentWaypointIndex = waypoints.Length - 1;
+                    movingForward = false;
+                }
+            }
+            else
+            {
+                currentWaypointIndex--;
+                if (currentWaypointIndex < 0)  // Si llega al primer waypoint, cambia de dirección
+                {
+                    currentWaypointIndex = 0;
+                    movingForward = true;
+                }
+            }
         }
 
         Boid closestBoid = DetectBoids();

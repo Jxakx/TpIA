@@ -19,14 +19,14 @@ public class FoodSpawner : MonoBehaviour
 
     void SpawnFood()
     {
-        // Generar una posición aleatoria dentro del área de spawn
+        // Generar una posición aleatoria dentro del área de spawn, con Y siempre en 0
         Vector3 randomPosition = new Vector3(
             Random.Range(-spawnAreaSize.x / 2, spawnAreaSize.x / 2), // Eje X
-            0f, // Mantén la comida en el plano XZ
+            0f, // Mantén la comida en el plano Y=0
             Random.Range(-spawnAreaSize.z / 2, spawnAreaSize.z / 2)  // Eje Z
         );
 
-        // Instanciar la comida en la posición generada
+        // Instanciar la comida en la posición generada, asegurando que se mantenga en el plano XZ
         Instantiate(foodPrefab, randomPosition, Quaternion.identity);
     }
 

@@ -68,6 +68,8 @@ public class Boid : MonoBehaviour
         transform.position = new Vector3(transform.position.x, 0, transform.position.z);
     }
 
+    // Método de colisión: destruir comida al tocarla
+    
     void UpdateNeighbors()
     {
         neighbors.Clear();
@@ -157,13 +159,6 @@ public class Boid : MonoBehaviour
         return (transform.position - hunter.position).normalized;
     }
 
-    // Método de colisión: destruir comida al tocarla
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Food"))
-        {
-            Destroy(other.gameObject);  // Destruir la comida
-            Debug.Log("Comida recogida");
-        }
-    }
+    
+    
 }

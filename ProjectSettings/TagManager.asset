@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Hunter
   - Food
+  - Boid
   layers:
   - Default
   - TransparentFX
