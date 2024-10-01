@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class MapLimitsRaycast : MonoBehaviour
 {
-    public float mapWidth = 10f;  // Ancho del mapa
-    public float mapHeight = 5f;  // Altura del mapa
-    public float mapDepth = 10f;  // Profundidad del mapa
+    public float mapWidth = 50f;  // Ancho del mapa
+    public float mapHeight = 50f;  // Altura del mapa
+    public float mapDepth = 50f;  // Profundidad del mapa
     public LayerMask limitLayer;  // Capa que representa los límites del mapa
 
     void Update()
     {
-        // Hacer raycasts en todas las direcciones para detectar los límites
+        // Detectar los límites del mapa con raycasts
         CheckMapBounds();
     }
 
@@ -19,8 +19,8 @@ public class MapLimitsRaycast : MonoBehaviour
     {
         RaycastHit hitLeft, hitRight, hitUp, hitDown, hitForward, hitBackward;
 
-        // Raycast hacia la izquierda
-        if (Physics.Raycast(transform.position, Vector3.left, out hitLeft, Mathf.Infinity, limitLayer))
+        // Raycast para la izquierda
+        if (Physics.Raycast(transform.position, Vector3.left, out hitLeft, mapWidth, limitLayer))
         {
             if (hitLeft.distance < mapWidth / 2f)
             {
@@ -28,8 +28,8 @@ public class MapLimitsRaycast : MonoBehaviour
             }
         }
 
-        // Raycast hacia la derecha
-        if (Physics.Raycast(transform.position, Vector3.right, out hitRight, Mathf.Infinity, limitLayer))
+        // Raycast para la derecha
+        if (Physics.Raycast(transform.position, Vector3.right, out hitRight, mapWidth, limitLayer))
         {
             if (hitRight.distance < mapWidth / 2f)
             {
@@ -38,7 +38,7 @@ public class MapLimitsRaycast : MonoBehaviour
         }
 
         // Raycast hacia arriba
-        if (Physics.Raycast(transform.position, Vector3.up, out hitUp, Mathf.Infinity, limitLayer))
+        if (Physics.Raycast(transform.position, Vector3.up, out hitUp, mapHeight, limitLayer))
         {
             if (hitUp.distance < mapHeight / 2f)
             {
@@ -47,7 +47,7 @@ public class MapLimitsRaycast : MonoBehaviour
         }
 
         // Raycast hacia abajo
-        if (Physics.Raycast(transform.position, Vector3.down, out hitDown, Mathf.Infinity, limitLayer))
+        if (Physics.Raycast(transform.position, Vector3.down, out hitDown, mapHeight, limitLayer))
         {
             if (hitDown.distance < mapHeight / 2f)
             {
@@ -55,8 +55,8 @@ public class MapLimitsRaycast : MonoBehaviour
             }
         }
 
-        // Raycast hacia adelante (eje Z)
-        if (Physics.Raycast(transform.position, Vector3.forward, out hitForward, Mathf.Infinity, limitLayer))
+        // Raycast hacia adelante
+        if (Physics.Raycast(transform.position, Vector3.forward, out hitForward, mapDepth, limitLayer))
         {
             if (hitForward.distance < mapDepth / 2f)
             {
@@ -64,8 +64,8 @@ public class MapLimitsRaycast : MonoBehaviour
             }
         }
 
-        // Raycast hacia atrás (eje Z negativo)
-        if (Physics.Raycast(transform.position, Vector3.back, out hitBackward, Mathf.Infinity, limitLayer))
+        // Raycast hacia atrás
+        if (Physics.Raycast(transform.position, Vector3.back, out hitBackward, mapDepth, limitLayer))
         {
             if (hitBackward.distance < mapDepth / 2f)
             {
@@ -74,7 +74,7 @@ public class MapLimitsRaycast : MonoBehaviour
         }
     }
 
-    // Visualizar los límites del mapa
+    // Visualizar los límites del mapa en el editor de Unity
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;

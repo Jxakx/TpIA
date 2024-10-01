@@ -4,52 +4,56 @@ using UnityEngine;
 
 public class Boid : MonoBehaviour
 {
-    public float speed = 2f;  // Velocidad de movimiento de los boids
-    public float neighborDistance = 3f;  // Distancia para detectar otros boids
-    public float cohesionStrength = 0.5f;  // Fuerza que atrae a los boids entre sí
-    public float separationDistance = 1.5f;  // Distancia mínima para evitar colisiones
-    public float separationStrength = 0.5f;  // Fuerza que repele a los boids
-    public float alignmentStrength = 0.5f;  // Fuerza que alinea la dirección de los boids
-    public Vector3 velocity;  // Vector que representa la velocidad de movimiento
+    public float speed = 5f;  // Velocidad de movimiento
+    public float neighborDistance = 10f;  // Distancia para detectar otros boids
+    public float cohesionStrength = 1f;  // Fuerza que atrae a los boids
+    public float separationDistance = 2f;  // Distancia mínima para evitar colisiones
+    public float separationStrength = 1.5f;  // Fuerza que repele a los boids
+    public float alignmentStrength = 1f;  // Fuerza que alinea la dirección de los boids
+    public Transform hunter;  // Referencia al cazador
+    public float fleeDistance = 10f;  // Distancia mínima para que los boids huyan del cazador
+    public float fleeStrength = 2f;  // Fuerza con la que los boids huyen del cazador
+    public Vector3 velocity;  // Vector de velocidad
 
-    private List<Boid> neighbors;  // Lista de boids vecinos
+    private List<Boid> neighbors;
 
     void Start()
     {
-        // Asignamos una velocidad inicial aleatoria en 3D
-        velocity = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized * speed;
-        neighbors = new List<Boid>();  // Inicializamos la lista de vecinos
+        velocity = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized * speed;
+        neighbors = new List<Boid>();
     }
 
     void Update()
     {
-        // Actualizamos la lista de boids vecinos
         UpdateNeighbors();
 
-        // Calculamos las fuerzas de cohesión, separación y alineación
         Vector3 cohesion = Cohesion() * cohesionStrength;
         Vector3 separation = Separation() * separationStrength;
         Vector3 alignment = Alignment() * alignmentStrength;
 
-        // Sumamos todas las fuerzas para obtener la dirección final
-        Vector3 flockingDirection = (cohesion + separation + alignment).normalized;
+        // Añadir la lógica de evasión si el cazador está cerca
+        Vector3 flee = Vector3.zero;
+        if (Vector3.Distance(transform.position, hunter.position) < fleeDistance)
+        {
+            flee = FleeFromHunter() * fleeStrength;
+        }
 
-        // Asignamos la velocidad final del boid
+        // Sumamos todas las fuerzas (incluyendo la evasión) para obtener la dirección final
+        Vector3 flockingDirection = (cohesion + separation + alignment + flee).normalized;
         velocity = flockingDirection * speed;
 
         // Movemos el boid en la dirección calculada
         transform.position += velocity * Time.deltaTime;
+
+        // Mantener el movimiento en el plano XZ
+        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
     }
 
-    // Método para actualizar la lista de vecinos cercanos
     void UpdateNeighbors()
     {
-        neighbors.Clear();  // Limpiamos la lista de vecinos
-
-        // Buscamos todos los boids en la escena
+        neighbors.Clear();
         foreach (Boid boid in FindObjectsOfType<Boid>())
         {
-            // Si el boid está cerca, lo añadimos a la lista de vecinos
             if (boid != this && Vector3.Distance(transform.position, boid.transform.position) < neighborDistance)
             {
                 neighbors.Add(boid);
@@ -57,30 +61,26 @@ public class Boid : MonoBehaviour
         }
     }
 
-    // Fuerza de cohesión: atrae al boid hacia el centro del grupo
     Vector3 Cohesion()
     {
-        Vector3 centerOfMass = Vector3.zero;  // Calculamos el centro de masa del grupo
+        Vector3 centerOfMass = Vector3.zero;
         foreach (Boid neighbor in neighbors)
         {
             centerOfMass += neighbor.transform.position;
         }
         if (neighbors.Count > 0)
         {
-            // Promediamos la posición de todos los vecinos
             centerOfMass /= neighbors.Count;
-            return (centerOfMass - transform.position).normalized;  // Dirección hacia el centro de masa
+            return (centerOfMass - transform.position).normalized;
         }
         return Vector3.zero;
     }
 
-    // Fuerza de separación: repele a los boids para evitar colisiones
     Vector3 Separation()
     {
         Vector3 separationForce = Vector3.zero;
         foreach (Boid neighbor in neighbors)
         {
-            // Si están demasiado cerca, aplicamos una fuerza de repulsión
             if (Vector3.Distance(transform.position, neighbor.transform.position) < separationDistance)
             {
                 separationForce -= (neighbor.transform.position - transform.position).normalized;
@@ -89,7 +89,6 @@ public class Boid : MonoBehaviour
         return separationForce.normalized;
     }
 
-    // Fuerza de alineación: alinea la dirección del boid con la del grupo
     Vector3 Alignment()
     {
         Vector3 avgVelocity = Vector3.zero;
@@ -99,10 +98,14 @@ public class Boid : MonoBehaviour
         }
         if (neighbors.Count > 0)
         {
-            // Promediamos la velocidad de todos los vecinos
             avgVelocity /= neighbors.Count;
-            return avgVelocity.normalized;  // Alineamos la dirección del boid
+            return avgVelocity.normalized;
         }
         return Vector3.zero;
+    }
+
+    Vector3 FleeFromHunter()
+    {
+        return (transform.position - hunter.position).normalized;  // Moverse en dirección opuesta al cazador
     }
 }

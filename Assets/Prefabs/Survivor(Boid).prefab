@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 463442266326941446}
   - component: {fileID: 3161966910331254609}
   - component: {fileID: 6935188880827265580}
-  - component: {fileID: 549236909610325594}
   m_Layer: 0
   m_Name: Survivor(Boid)
   m_TagString: Untagged
@@ -122,12 +121,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54af3cbaf343d984285b5e01d337853f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
-  neighborDistance: 3
-  cohesionStrength: 1
-  separationDistance: 2
-  separationStrength: 1
-  alignmentStrength: 1
+  speed: 4
+  neighborDistance: 30
+  cohesionStrength: 2
+  separationDistance: 4
+  separationStrength: 3
+  alignmentStrength: 5
   velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &6935188880827265580
 MonoBehaviour:
@@ -149,21 +148,3 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 0
---- !u!114 &549236909610325594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4988309978905656644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfd04687b7014744d930a8f4e9bdc23a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mapWidth: 50
-  mapHeight: 1
-  mapDepth: 50
-  limitLayer:
-    serializedVersion: 2
-    m_Bits: 128
