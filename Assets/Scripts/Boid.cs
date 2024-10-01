@@ -10,37 +10,35 @@ public class Boid : MonoBehaviour
     public float separationDistance = 1.5f;  // Distancia mínima para evitar colisiones
     public float separationStrength = 0.5f;  // Fuerza que repele a los boids
     public float alignmentStrength = 0.5f;  // Fuerza que alinea la dirección de los boids
-    public Vector2 velocity;  // Vector que representa la velocidad de movimiento
+    public Vector3 velocity;  // Vector que representa la velocidad de movimiento
 
     private List<Boid> neighbors;  // Lista de boids vecinos
 
-    // Método que se ejecuta al iniciar el juego
     void Start()
     {
-        // Asignamos una velocidad inicial aleatoria
-        velocity = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized * speed;
+        // Asignamos una velocidad inicial aleatoria en 3D
+        velocity = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized * speed;
         neighbors = new List<Boid>();  // Inicializamos la lista de vecinos
     }
 
-    // Método que se ejecuta en cada frame del juego
     void Update()
     {
         // Actualizamos la lista de boids vecinos
         UpdateNeighbors();
 
         // Calculamos las fuerzas de cohesión, separación y alineación
-        Vector2 cohesion = Cohesion() * cohesionStrength;
-        Vector2 separation = Separation() * separationStrength;
-        Vector2 alignment = Alignment() * alignmentStrength;
+        Vector3 cohesion = Cohesion() * cohesionStrength;
+        Vector3 separation = Separation() * separationStrength;
+        Vector3 alignment = Alignment() * alignmentStrength;
 
         // Sumamos todas las fuerzas para obtener la dirección final
-        Vector2 flockingDirection = (cohesion + separation + alignment).normalized;
+        Vector3 flockingDirection = (cohesion + separation + alignment).normalized;
 
         // Asignamos la velocidad final del boid
         velocity = flockingDirection * speed;
 
         // Movemos el boid en la dirección calculada
-        transform.position += (Vector3)velocity * Time.deltaTime;
+        transform.position += velocity * Time.deltaTime;
     }
 
     // Método para actualizar la lista de vecinos cercanos
@@ -52,7 +50,7 @@ public class Boid : MonoBehaviour
         foreach (Boid boid in FindObjectsOfType<Boid>())
         {
             // Si el boid está cerca, lo añadimos a la lista de vecinos
-            if (boid != this && Vector2.Distance(transform.position, boid.transform.position) < neighborDistance)
+            if (boid != this && Vector3.Distance(transform.position, boid.transform.position) < neighborDistance)
             {
                 neighbors.Add(boid);
             }
@@ -60,41 +58,41 @@ public class Boid : MonoBehaviour
     }
 
     // Fuerza de cohesión: atrae al boid hacia el centro del grupo
-    Vector2 Cohesion()
+    Vector3 Cohesion()
     {
-        Vector2 centerOfMass = Vector2.zero;  // Calculamos el centro de masa del grupo
+        Vector3 centerOfMass = Vector3.zero;  // Calculamos el centro de masa del grupo
         foreach (Boid neighbor in neighbors)
         {
-            centerOfMass += (Vector2)neighbor.transform.position;
+            centerOfMass += neighbor.transform.position;
         }
         if (neighbors.Count > 0)
         {
             // Promediamos la posición de todos los vecinos
             centerOfMass /= neighbors.Count;
-            return (centerOfMass - (Vector2)transform.position).normalized;  // Dirección hacia el centro de masa
+            return (centerOfMass - transform.position).normalized;  // Dirección hacia el centro de masa
         }
-        return Vector2.zero;
+        return Vector3.zero;
     }
 
     // Fuerza de separación: repele a los boids para evitar colisiones
-    Vector2 Separation()
+    Vector3 Separation()
     {
-        Vector2 separationForce = Vector2.zero;
+        Vector3 separationForce = Vector3.zero;
         foreach (Boid neighbor in neighbors)
         {
             // Si están demasiado cerca, aplicamos una fuerza de repulsión
-            if (Vector2.Distance(transform.position, neighbor.transform.position) < separationDistance)
+            if (Vector3.Distance(transform.position, neighbor.transform.position) < separationDistance)
             {
-                separationForce -= ((Vector2)neighbor.transform.position - (Vector2)transform.position).normalized;
+                separationForce -= (neighbor.transform.position - transform.position).normalized;
             }
         }
         return separationForce.normalized;
     }
 
     // Fuerza de alineación: alinea la dirección del boid con la del grupo
-    Vector2 Alignment()
+    Vector3 Alignment()
     {
-        Vector2 avgVelocity = Vector2.zero;
+        Vector3 avgVelocity = Vector3.zero;
         foreach (Boid neighbor in neighbors)
         {
             avgVelocity += neighbor.velocity;
@@ -105,6 +103,6 @@ public class Boid : MonoBehaviour
             avgVelocity /= neighbors.Count;
             return avgVelocity.normalized;  // Alineamos la dirección del boid
         }
-        return Vector2.zero;
+        return Vector3.zero;
     }
 }

@@ -7,13 +7,13 @@ public class HunterFSM : MonoBehaviour
     enum HunterState { Patrol, Chase, Recharge }
     HunterState currentState = HunterState.Patrol;
 
-    public Transform[] waypoints; // Puntos de patrullaje
-    public float speed = 3f;
-    public float detectionRange = 5f; // Rango de detección de los boids
-    public float energy;
-    public float energyDecayRate = 0.5f;
-    public float rechargeRate = 5f;
-    public Transform rechargeStation; // Lugar donde se recarga energía
+    public Transform[] waypoints;  // Puntos de patrullaje
+    public float speed = 3f;  // Velocidad de movimiento del cazador
+    public float detectionRange = 5f;  // Rango de detección de los boids
+    public float energy = 100f;  // Nivel de energía del cazador
+    public float energyDecayRate = 0.5f;  // Velocidad de pérdida de energía
+    public float rechargeRate = 5f;  // Velocidad de recarga de energía
+    public Transform rechargeStation;  // Lugar de recarga
 
     private int currentWaypointIndex = 0;
 
@@ -32,7 +32,7 @@ public class HunterFSM : MonoBehaviour
                 break;
         }
 
-        // Reducir energía en todo momento excepto cuando recarga
+        // Reducir energía a lo largo del tiempo, excepto durante la recarga
         if (currentState != HunterState.Recharge)
         {
             energy -= energyDecayRate * Time.deltaTime;
@@ -49,12 +49,13 @@ public class HunterFSM : MonoBehaviour
         Transform targetWaypoint = waypoints[currentWaypointIndex];
         MoveTowards(targetWaypoint.position);
 
+        // Si llega al waypoint, cambia al siguiente
         if (Vector3.Distance(transform.position, targetWaypoint.position) < 1f)
         {
             currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
         }
 
-        // Cambiar a persecución si detecta a un boid
+        // Si detecta un boid, cambia a estado de persecución
         Boid closestBoid = DetectBoids();
         if (closestBoid != null)
         {
@@ -77,7 +78,10 @@ public class HunterFSM : MonoBehaviour
 
     void Recharge()
     {
+        // Moverse hacia la estación de recarga
         MoveTowards(rechargeStation.position);
+
+        // Si llega a la estación, recargar energía
         if (Vector3.Distance(transform.position, rechargeStation.position) < 1f)
         {
             energy += rechargeRate * Time.deltaTime;
@@ -91,6 +95,7 @@ public class HunterFSM : MonoBehaviour
 
     Boid DetectBoids()
     {
+        // Detectar boids dentro del rango de detección
         Boid[] boids = FindObjectsOfType<Boid>();
         foreach (Boid boid in boids)
         {
@@ -104,6 +109,7 @@ public class HunterFSM : MonoBehaviour
 
     void MoveTowards(Vector3 targetPosition)
     {
+        // Moverse hacia la posición objetivo
         Vector3 direction = (targetPosition - transform.position).normalized;
         transform.position += direction * speed * Time.deltaTime;
     }
