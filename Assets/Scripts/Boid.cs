@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Boid : MonoBehaviour
 {
     public float speed = 5f;  // Velocidad de movimiento
@@ -21,11 +22,13 @@ public class Boid : MonoBehaviour
     // Para la detección de comida
     public float foodDetectionRange = 15f;  // Rango para detectar la comida
     private Transform nearestFood;  // La comida más cercana
+    public float arriveRadius = 1.5f;  // Distancia para que el Boid desacelere al llegar a la comida
+    public float foodEatenDistance = 1f;  // Distancia mínima para considerar que el boid ha llegado a la comida
 
     private List<Boid> neighbors;
 
     // Parámetros para suavizar decisiones
-    private float decisionCooldown = 0.5f;  // Medio segundo entre decisiones
+    private float decisionCooldown = 0.3f;  // Medio segundo entre decisiones
     private float lastDecisionTime;
 
     void Start()
@@ -53,6 +56,14 @@ public class Boid : MonoBehaviour
 
         // Mantener el movimiento en el plano XZ
         transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+
+        // Verificar si está lo suficientemente cerca de la comida para destruirla
+        if (nearestFood != null && Vector3.Distance(transform.position, nearestFood.position) < foodEatenDistance)
+        {
+            Destroy(nearestFood.gameObject);
+            nearestFood = null; // Para evitar que intente seguir la comida destruida
+            Debug.Log("Comida destruida al acercarse");
+        }
     }
 
     void UpdateBoidBehavior()
@@ -74,7 +85,7 @@ public class Boid : MonoBehaviour
         Vector3 moveToFood = Vector3.zero;
         if (nearestFood != null && Vector3.Distance(hunter.position, nearestFood.position) > fleeDistance)  // Priorizar huir del cazador sobre ir a la comida
         {
-            moveToFood = MoveTowardsFood() * speed;
+            moveToFood = ArriveAtFood(nearestFood.position);  // Aplicamos Arrive
         }
 
         // Introducimos una dirección base para que siempre se muevan un poco
@@ -85,13 +96,22 @@ public class Boid : MonoBehaviour
         velocity = flockingDirection * speed;
     }
 
-    // Método de colisión: destruir comida al tocarla
-    void OnTriggerEnter(Collider other)
+    // Función para la llegada suave a la comida (Arrive)
+    Vector3 ArriveAtFood(Vector3 targetPosition)
     {
-        if (other.CompareTag("Food"))
+        Vector3 directionToTarget = targetPosition - transform.position;
+        float distance = directionToTarget.magnitude;
+
+        if (distance < arriveRadius)
         {
-            Destroy(other.gameObject);
-            Debug.Log("Comida destruida al tocarla");
+            // Desacelerar cuando se acerque a la comida
+            float reduceSpeedFactor = distance / arriveRadius;
+            return directionToTarget.normalized * speed * reduceSpeedFactor;
+        }
+        else
+        {
+            // Ir a la velocidad normal si aún está lejos
+            return directionToTarget.normalized * speed;
         }
     }
 
@@ -168,16 +188,6 @@ public class Boid : MonoBehaviour
                 nearestFood = food.transform;
             }
         }
-    }
-
-    // Moverse hacia la comida más cercana
-    Vector3 MoveTowardsFood()
-    {
-        if (nearestFood != null)
-        {
-            return (nearestFood.position - transform.position).normalized;
-        }
-        return Vector3.zero;
     }
 
     // Huir del cazador
