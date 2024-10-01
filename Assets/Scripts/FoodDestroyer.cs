@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class FoodDestroyer : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    // Este script debe estar en cada prefab de comida.
+
+    private void OnCollisionEnter(Collision collision)
     {
-        if (other.CompareTag("Boid"))  // Asegúrate de que los boids tengan el tag "Boid"
+        if (collision.gameObject.CompareTag("Boid"))  // Asegúrate de que los boids tengan el tag "Boid"
         {
             // Destruir la comida cuando un Boid la toque
             Destroy(gameObject);

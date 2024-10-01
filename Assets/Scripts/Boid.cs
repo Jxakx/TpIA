@@ -24,6 +24,10 @@ public class Boid : MonoBehaviour
 
     private List<Boid> neighbors;
 
+    // Parámetros para suavizar decisiones
+    private float decisionCooldown = 0.5f;  // Medio segundo entre decisiones
+    private float lastDecisionTime;
+
     void Start()
     {
         velocity = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized * speed;
@@ -31,6 +35,27 @@ public class Boid : MonoBehaviour
     }
 
     void Update()
+    {
+        // Usamos un cooldown para suavizar los movimientos
+        if (Time.time - lastDecisionTime > decisionCooldown)
+        {
+            lastDecisionTime = Time.time;
+            UpdateBoidBehavior();
+        }
+
+        // Movemos el boid en la dirección calculada
+        transform.position += velocity * Time.deltaTime;
+
+        // Limitar el movimiento dentro del área especificada
+        float x = Mathf.Clamp(transform.position.x, -mapWidth / 2, mapWidth / 2);
+        float z = Mathf.Clamp(transform.position.z, -mapDepth / 2, mapDepth / 2);
+        transform.position = new Vector3(x, transform.position.y, z);
+
+        // Mantener el movimiento en el plano XZ
+        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+    }
+
+    void UpdateBoidBehavior()
     {
         UpdateNeighbors();
         DetectNearestFood();  // Detectar la comida más cercana
@@ -47,29 +72,29 @@ public class Boid : MonoBehaviour
         }
 
         Vector3 moveToFood = Vector3.zero;
-        if (nearestFood != null)  // Si hay comida cercana, moverse hacia ella
+        if (nearestFood != null && Vector3.Distance(hunter.position, nearestFood.position) > fleeDistance)  // Priorizar huir del cazador sobre ir a la comida
         {
             moveToFood = MoveTowardsFood() * speed;
         }
 
-        // Sumamos las fuerzas de flocking, evasión, y moverse hacia la comida
-        Vector3 flockingDirection = (cohesion + separation + alignment + flee + moveToFood).normalized;
+        // Introducimos una dirección base para que siempre se muevan un poco
+        Vector3 baseDirection = new Vector3(1f, 0f, 1f).normalized;
+
+        // Sumamos las fuerzas de flocking, evasión, movimiento hacia la comida y una base de dirección
+        Vector3 flockingDirection = (cohesion + separation + alignment + flee + moveToFood + baseDirection * 0.1f).normalized;
         velocity = flockingDirection * speed;
-
-        // Movemos el boid en la dirección calculada
-        transform.position += velocity * Time.deltaTime;
-
-        // Limitar el movimiento dentro del área especificada
-        float x = Mathf.Clamp(transform.position.x, -mapWidth / 2, mapWidth / 2);
-        float z = Mathf.Clamp(transform.position.z, -mapDepth / 2, mapDepth / 2);
-        transform.position = new Vector3(x, transform.position.y, z);
-
-        // Mantener el movimiento en el plano XZ
-        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
     }
 
     // Método de colisión: destruir comida al tocarla
-    
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Food"))
+        {
+            Destroy(other.gameObject);
+            Debug.Log("Comida destruida al tocarla");
+        }
+    }
+
     void UpdateNeighbors()
     {
         neighbors.Clear();
@@ -102,9 +127,11 @@ public class Boid : MonoBehaviour
         Vector3 separationForce = Vector3.zero;
         foreach (Boid neighbor in neighbors)
         {
-            if (Vector3.Distance(transform.position, neighbor.transform.position) < separationDistance)
+            float distance = Vector3.Distance(transform.position, neighbor.transform.position);
+            if (distance < separationDistance)
             {
-                separationForce -= (neighbor.transform.position - transform.position).normalized;
+                Vector3 fleeDirection = (transform.position - neighbor.transform.position).normalized;
+                separationForce += fleeDirection / distance;  // Mayor fuerza cuanto más cerca estén
             }
         }
         return separationForce.normalized;
@@ -158,7 +185,4 @@ public class Boid : MonoBehaviour
     {
         return (transform.position - hunter.position).normalized;
     }
-
-    
-    
 }
