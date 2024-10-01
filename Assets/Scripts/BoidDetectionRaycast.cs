@@ -11,13 +11,12 @@ public class BoidDetectionRaycast : MonoBehaviour
 
     void Update()
     {
-        // Direccion hacia el cazador
+        // Dirección hacia el cazador
         Vector3 directionToCazador = (cazador.position - transform.position).normalized;
 
         // Hacer un raycast en la dirección del cazador
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, directionToCazador, detectionRange, cazadorLayer | obstacleLayer);
-
-        if (hit.collider != null)
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, directionToCazador, out hit, detectionRange, cazadorLayer | obstacleLayer))
         {
             // Si el raycast detecta al cazador sin obstáculos en el medio
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Cazador"))
