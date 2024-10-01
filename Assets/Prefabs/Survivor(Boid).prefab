@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: efa13b9bb076f6643996207cb1c2bef3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -122,18 +122,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  neighborDistance: 15
-  cohesionStrength: 3
-  separationDistance: 1.5
-  separationStrength: 1.5
+  neighborDistance: 30
+  cohesionStrength: 2
+  separationDistance: 7
+  separationStrength: 3
   alignmentStrength: 3
   hunter: {fileID: 0}
   fleeDistance: 10
-  fleeStrength: 3
+  fleeStrength: 5
   velocity: {x: 0, y: 0, z: 0}
   mapWidth: 50
   mapDepth: 50
-  foodDetectionRange: 30
+  foodDetectionRange: 15
 --- !u!114 &6935188880827265580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cazador: {fileID: 0}
-  detectionRange: 10
+  detectionRange: 4
   cazadorLayer:
     serializedVersion: 2
     m_Bits: 64
