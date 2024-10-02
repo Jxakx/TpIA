@@ -28,13 +28,24 @@ public class Boid : MonoBehaviour
     private List<Boid> neighbors;
 
     // Parámetros para suavizar decisiones
-    private float decisionCooldown = 0.3f;  // Medio segundo entre decisiones
+    private float decisionCooldown = 0.3f;  // Tiempo entre decisiones
     private float lastDecisionTime;
+
+    // Nueva variable para almacenar la dirección base persistente
+    private Vector3 baseDirection;
+
+    // Tiempo entre cambios de dirección base
+    private float baseDirectionChangeCooldown = 2f;
+    private float lastBaseDirectionChangeTime;
 
     void Start()
     {
         velocity = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized * speed;
         neighbors = new List<Boid>();
+
+        // Iniciar la dirección base aleatoria
+        baseDirection = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
+
     }
 
     void Update()
@@ -49,24 +60,36 @@ public class Boid : MonoBehaviour
         // Movemos el boid en la dirección calculada
         transform.position += velocity * Time.deltaTime;
 
-        // Limitar el movimiento dentro del área especificada
-        float x = Mathf.Clamp(transform.position.x, -mapWidth / 2, mapWidth / 2);
-        float z = Mathf.Clamp(transform.position.z, -mapDepth / 2, mapDepth / 2);
-        transform.position = new Vector3(x, transform.position.y, z);
+        // Comportamiento de "wrapping": Si el boid sale de los límites, reaparece en el lado opuesto, pero ligeramente dentro del mapa
+        float buffer = 0.1f;  // Pequeño desplazamiento para evitar quedarse trancado en el borde
 
-        // Mantener el movimiento en el plano XZ
+        if (transform.position.x > mapWidth / 2)
+        {
+            transform.position = new Vector3(-mapWidth / 2 + buffer, transform.position.y, transform.position.z);
+        }
+        else if (transform.position.x < -mapWidth / 2)
+        {
+            transform.position = new Vector3(mapWidth / 2 - buffer, transform.position.y, transform.position.z);
+        }
+
+        if (transform.position.z > mapDepth / 2)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, -mapDepth / 2 + buffer);
+        }
+        else if (transform.position.z < -mapDepth / 2)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, mapDepth / 2 - buffer);
+        }
+
+        // Mantener el boid a nivel del suelo (plano XZ)
         transform.position = new Vector3(transform.position.x, 0, transform.position.z);
 
         // Verificar si está lo suficientemente cerca de la comida para destruirla
         if (nearestFood != null && Vector3.Distance(transform.position, nearestFood.position) < foodEatenDistance)
         {
             Destroy(nearestFood.gameObject);
-            nearestFood = null; // Para evitar que intente seguir la comida destruida
-            Debug.Log("Comida destruida al acercarse");
+            nearestFood = null;  // Para evitar que intente seguir la comida destruida
         }
-
-        // Forzar alejamiento de los bordes del mapa
-        ForceAwayFromMapEdges();
     }
 
     void UpdateBoidBehavior()
@@ -91,15 +114,18 @@ public class Boid : MonoBehaviour
             moveToFood = ArriveAtFood(nearestFood.position);  // Aplicamos Arrive
         }
 
-        // Introducimos una dirección base para que siempre se muevan un poco
-        Vector3 baseDirection = new Vector3(1f, 0f, 1f).normalized;
+        // Cambiar la dirección base cada cierto tiempo (para evitar titubeos)
+        if (Time.time - lastBaseDirectionChangeTime > baseDirectionChangeCooldown)
+        {
+            baseDirection = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
+            lastBaseDirectionChangeTime = Time.time;
+        }
 
-        // Sumamos las fuerzas de flocking, evasión, movimiento hacia la comida y una base de dirección
-        Vector3 flockingDirection = (cohesion + separation + alignment + flee + moveToFood + baseDirection * 0.1f).normalized;
+        // Sumamos las fuerzas de flocking, evasión, movimiento hacia la comida y la dirección base
+        Vector3 flockingDirection = (cohesion + separation + alignment + flee + moveToFood + baseDirection * 0.5f).normalized;
         velocity = flockingDirection * speed;
     }
 
-    // Función para la llegada suave a la comida (Arrive)
     Vector3 ArriveAtFood(Vector3 targetPosition)
     {
         Vector3 directionToTarget = targetPosition - transform.position;
@@ -107,13 +133,11 @@ public class Boid : MonoBehaviour
 
         if (distance < arriveRadius)
         {
-            // Desacelerar cuando se acerque a la comida
             float reduceSpeedFactor = distance / arriveRadius;
             return directionToTarget.normalized * speed * reduceSpeedFactor;
         }
         else
         {
-            // Ir a la velocidad normal si aún está lejos
             return directionToTarget.normalized * speed;
         }
     }
@@ -175,7 +199,6 @@ public class Boid : MonoBehaviour
         return Vector3.zero;
     }
 
-    // Detectar la comida más cercana
     void DetectNearestFood()
     {
         GameObject[] foodItems = GameObject.FindGameObjectsWithTag("Food");
@@ -193,40 +216,18 @@ public class Boid : MonoBehaviour
         }
     }
 
-    // Huir del cazador
     Vector3 FleeFromHunter()
     {
-        return (transform.position - hunter.position).normalized;
-    }
+        Vector3 fleeDirection = (transform.position - hunter.position).normalized;
 
-    // Método para alejar a los boids de los límites del mapa
-    void ForceAwayFromMapEdges()
-    {
-        float edgeThreshold = 5f;  // Distancia mínima para empezar a aplicar la repulsión en los bordes
-        Vector3 repulsionForce = Vector3.zero;
+        // Añadir un poco de aleatoriedad a la dirección de huida
+        Vector3 randomOffset = new Vector3(
+            Random.Range(-0.5f, 0.5f),
+            0,
+            Random.Range(-0.5f, 0.5f)
+        ).normalized;
 
-        if (transform.position.x > mapWidth / 2 - edgeThreshold)
-        {
-            repulsionForce += Vector3.left;  // Repulsión hacia la izquierda
-        }
-        else if (transform.position.x < -mapWidth / 2 + edgeThreshold)
-        {
-            repulsionForce += Vector3.right;  // Repulsión hacia la derecha
-        }
-
-        if (transform.position.z > mapDepth / 2 - edgeThreshold)
-        {
-            repulsionForce += Vector3.back;  // Repulsión hacia abajo (atrás)
-        }
-        else if (transform.position.z < -mapDepth / 2 + edgeThreshold)
-        {
-            repulsionForce += Vector3.forward;  // Repulsión hacia arriba (adelante)
-        }
-
-        // Aplicar la fuerza de repulsión si está cerca de los bordes
-        if (repulsionForce != Vector3.zero)
-        {
-            velocity += repulsionForce.normalized * speed * 0.5f;  // Ajusta la magnitud de la repulsión según sea necesario
-        }
+        fleeDirection += randomOffset;
+        return fleeDirection.normalized;
     }
 }

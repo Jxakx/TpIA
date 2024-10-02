@@ -121,19 +121,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54af3cbaf343d984285b5e01d337853f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 6
-  neighborDistance: 30
-  cohesionStrength: 3
-  separationDistance: 2
-  separationStrength: 2
-  alignmentStrength: 3
+  speed: 8
+  neighborDistance: 10
+  cohesionStrength: 6.5
+  separationDistance: 6
+  separationStrength: 6
+  alignmentStrength: 6.5
   hunter: {fileID: 0}
   fleeDistance: 10
-  fleeStrength: 2
+  fleeStrength: 10
   velocity: {x: 0, y: 0, z: 0}
   mapWidth: 100
   mapDepth: 100
-  foodDetectionRange: 50
+  foodDetectionRange: 15
   arriveRadius: 1.5
   foodEatenDistance: 1
 --- !u!114 &6935188880827265580
@@ -149,10 +149,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cazador: {fileID: 0}
-  detectionRange: 10
+  detectionRange: 6
   cazadorLayer:
     serializedVersion: 2
     m_Bits: 64
   obstacleLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
