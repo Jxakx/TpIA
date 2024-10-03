@@ -5,45 +5,45 @@ using UnityEngine;
 
 public class Boid : MonoBehaviour
 {
-    public float speed = 5f;  // Velocidad de movimiento
-    public float neighborDistance = 10f;  // Distancia para detectar otros boids
+    public float speed = 5f;  
+    public float neighborDistance = 10f;  
     public float cohesionStrength = 1f;  // Fuerza que atrae a los boids
     public float separationDistance = 2f;  // Distancia mínima para evitar colisiones
     public float separationStrength = 1.5f;  // Fuerza que repele a los boids
     public float alignmentStrength = 1f;  // Fuerza que alinea la dirección de los boids
-    public Transform hunter;  // Referencia al cazador
+    public Transform hunter; 
     public float fleeDistance = 10f;  // Distancia mínima para que los boids huyan del cazador
     public float fleeStrength = 2f;  // Fuerza con la que los boids huyen del cazador
-    public Vector3 velocity;  // Vector de velocidad
-
-    public float mapWidth = 50f;  // Ancho del área de movimiento
-    public float mapDepth = 50f;  // Profundidad del área de movimiento
+    public Vector3 velocity;
+    public float mapWidth = 50f; 
+    public float mapDepth = 50f;  
 
     // Para la detección de comida
-    public float foodDetectionRange = 15f;  // Rango para detectar la comida
-    private Transform nearestFood;  // La comida más cercana
+    public float foodDetectionRange = 15f; 
+    private Transform nearestFood;  
     public float arriveRadius = 1.5f;  // Distancia para que el Boid desacelere al llegar a la comida
     public float foodEatenDistance = 1f;  // Distancia mínima para considerar que el boid ha llegado a la comida
 
     private List<Boid> neighbors;
 
     // Parámetros para suavizar decisiones
-    private float decisionCooldown = 0.3f;  // Tiempo entre decisiones
+    private float decisionCooldown = 0.3f; 
     private float lastDecisionTime;
 
-    // Nueva variable para almacenar la dirección base persistente
+   
     private Vector3 baseDirection;
 
-    // Tiempo entre cambios de dirección base
+    // Tiempo entre cambios de dirección (para que nunca se quedan estaticos)
     private float baseDirectionChangeCooldown = 2f;
     private float lastBaseDirectionChangeTime;
 
     void Start()
     {
+        // Movimiento colectivo aleatorio 
         velocity = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized * speed;
         neighbors = new List<Boid>();
 
-        // Iniciar la dirección base aleatoria
+        // Movimiento individual aleatorio 
         baseDirection = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
 
     }
@@ -57,10 +57,9 @@ public class Boid : MonoBehaviour
             UpdateBoidBehavior();
         }
 
-        // Movemos el boid en la dirección calculada
         transform.position += velocity * Time.deltaTime;
 
-        // Comportamiento de "wrapping": Si el boid sale de los límites, reaparece en el lado opuesto, pero ligeramente dentro del mapa
+        // Si el boid sale de los límites, reaparece en el lado opuesto
         float buffer = 0.1f;  // Pequeño desplazamiento para evitar quedarse trancado en el borde
 
         if (transform.position.x > mapWidth / 2)
@@ -81,7 +80,7 @@ public class Boid : MonoBehaviour
             transform.position = new Vector3(transform.position.x, transform.position.y, mapDepth / 2 - buffer);
         }
 
-        // Mantener el boid a nivel del suelo (plano XZ)
+        // Mantener el boid a nivel del suelo (Traspasaba el suelo y volaba)
         transform.position = new Vector3(transform.position.x, 0, transform.position.z);
 
         // Verificar si está lo suficientemente cerca de la comida para destruirla
@@ -95,7 +94,7 @@ public class Boid : MonoBehaviour
     void UpdateBoidBehavior()
     {
         UpdateNeighbors();
-        DetectNearestFood();  // Detectar la comida más cercana
+        DetectNearestFood();  // Detecta la comida más cercana
 
         Vector3 cohesion = Cohesion() * cohesionStrength;
         Vector3 separation = Separation() * separationStrength;
@@ -111,10 +110,10 @@ public class Boid : MonoBehaviour
         Vector3 moveToFood = Vector3.zero;
         if (nearestFood != null && Vector3.Distance(hunter.position, nearestFood.position) > fleeDistance)  // Priorizar huir del cazador sobre ir a la comida
         {
-            moveToFood = ArriveAtFood(nearestFood.position);  // Aplicamos Arrive
+            moveToFood = ArriveAtFood(nearestFood.position);  // Arrive
         }
 
-        // Cambiar la dirección base cada cierto tiempo (para evitar titubeos)
+        // Cambiar la dirección base cada cierto tiempo (es para evitar que titubeen)
         if (Time.time - lastBaseDirectionChangeTime > baseDirectionChangeCooldown)
         {
             baseDirection = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
@@ -178,7 +177,7 @@ public class Boid : MonoBehaviour
             if (distance < separationDistance)
             {
                 Vector3 fleeDirection = (transform.position - neighbor.transform.position).normalized;
-                separationForce += fleeDirection / distance;  // Mayor fuerza cuanto más cerca estén
+                separationForce += fleeDirection / distance;  // Mayor fuerza cuanto más cerca estén (es que se chocan mucho)
             }
         }
         return separationForce.normalized;
@@ -220,12 +219,8 @@ public class Boid : MonoBehaviour
     {
         Vector3 fleeDirection = (transform.position - hunter.position).normalized;
 
-        // Añadir un poco de aleatoriedad a la dirección de huida
-        Vector3 randomOffset = new Vector3(
-            Random.Range(-0.5f, 0.5f),
-            0,
-            Random.Range(-0.5f, 0.5f)
-        ).normalized;
+        // Aleatoriedad al momento de huida
+        Vector3 randomOffset = new Vector3(Random.Range(-0.5f, 0.5f), 0, Random.Range(-0.5f, 0.5f)).normalized;
 
         fleeDirection += randomOffset;
         return fleeDirection.normalized;

@@ -20,6 +20,7 @@ public class HunterFSM : MonoBehaviour
 
     void Update()
     {
+        //Cambio de estados
         switch (currentState)
         {
             case HunterState.Patrol:

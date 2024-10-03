@@ -4,33 +4,40 @@ using UnityEngine;
 
 public class FoodSpawner : MonoBehaviour
 {
-    public GameObject foodPrefab;      // Prefab de la comida
-    public Vector3 spawnAreaSize = new Vector3(50f, 0f, 50f);  // Tamaño del área donde spawneará la comida
-    public int foodCount = 10;         // Cantidad de comida a spawnear inicialmente
+    public GameObject foodPrefab;      
+    public Vector3 spawnAreaSize = new Vector3(50f, 0f, 50f);  
+    public int foodCount = 10;         
+    public float spawnInterval = 1.5f;  
 
     void Start()
     {
-        // Spawnear la cantidad de comida especificada
+        // Spawnear cantidad de comida 
         for (int i = 0; i < foodCount; i++)
         {
             SpawnFood();
         }
+
+        // Iniciar la corrutina para spawnear comida
+        StartCoroutine(SpawnFoodPeriodically());
     }
 
     void SpawnFood()
     {
-        // Generar una posición aleatoria dentro del área de spawn, con Y siempre en 0
-        Vector3 randomPosition = new Vector3(
-            Random.Range(-spawnAreaSize.x / 2, spawnAreaSize.x / 2), // Eje X
-            0f, // Mantén la comida en el plano Y=0
-            Random.Range(-spawnAreaSize.z / 2, spawnAreaSize.z / 2)  // Eje Z
-        );
+        // Generar una posición aleatoria dentro del área de spawn (para que spawnee siempre a la altura de los boid)
+        Vector3 randomPosition = new Vector3(Random.Range(-spawnAreaSize.x / 2, spawnAreaSize.x / 2), 0f, Random.Range(-spawnAreaSize.z / 2, spawnAreaSize.z / 2));
 
-        // Instanciar la comida en la posición generada, asegurando que se mantenga en el plano XZ
         Instantiate(foodPrefab, randomPosition, Quaternion.identity);
     }
 
-    // Visualizar el área de spawn en el editor
+    IEnumerator SpawnFoodPeriodically()//Spawnear prefab cada 1.5 seg
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(spawnInterval);
+            SpawnFood();
+        }
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
