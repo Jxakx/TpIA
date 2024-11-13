@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Boid : MonoBehaviour
 {
-    public float speed = 5f;
+    public float speed = 5f; // Fixed speed for all Boids
     public float acceleration = 10f;
     public float evadeBoost = 1.5f; // Boost multiplier when fleeing
     public float neighborDistance = 10f;
@@ -83,7 +83,10 @@ public class Boid : MonoBehaviour
     {
         if (nearestFood != null && Vector3.Distance(transform.position, nearestFood.position) < foodEatenDistance)
         {
-            Destroy(nearestFood.gameObject);
+            if (nearestFood.CompareTag("Food"))
+            {
+                Destroy(nearestFood.gameObject);
+            }
             nearestFood = null;
         }
     }
@@ -98,12 +101,12 @@ public class Boid : MonoBehaviour
         Vector3 alignment = Alignment() * alignmentStrength;
         Vector3 flee = Vector3.zero;
 
-        // If the hunter is close, prioritize fleeing with an evade boost
+        // If the hunter is close, prioritize fleeing with an evade boost and randomness
         if (Vector3.Distance(transform.position, hunter.position) < fleeDistance)
         {
             flee = FleeFromHunter() * fleeStrength * evadeBoost;
             desiredVelocity = flee.normalized * speed; // Evade overrides other behaviors
-            return; // Skip further behavior calculations during flee
+            return;
         }
 
         Vector3 moveToFood = Vector3.zero;
@@ -116,6 +119,7 @@ public class Boid : MonoBehaviour
             lastBaseDirectionChangeTime = Time.time;
         }
 
+        // Combine all behaviors with a natural balance
         desiredVelocity = (cohesion + separation + alignment + moveToFood + baseDirection * 0.5f).normalized * speed;
     }
 
@@ -205,6 +209,8 @@ public class Boid : MonoBehaviour
     Vector3 FleeFromHunter()
     {
         Vector3 fleeDirection = (transform.position - hunter.position).normalized;
+
+        // Add randomness for more natural movement
         Vector3 randomOffset = Random.insideUnitSphere * 0.5f;
         fleeDirection += new Vector3(randomOffset.x, 0, randomOffset.z).normalized;
         return fleeDirection.normalized;

@@ -24,9 +24,14 @@ public class FoodSpawner : MonoBehaviour
     void Update()
     {
         // Continuously check if food count is below the max and respawn if needed
-        if (spawnedFood.Count < maxFoodCount)
+        for (int i = spawnedFood.Count - 1; i >= 0; i--)
         {
-            StartCoroutine(RespawnFoodAfterDelay());
+            // Remove null entries for food objects that were destroyed
+            if (spawnedFood[i] == null)
+            {
+                spawnedFood.RemoveAt(i);
+                StartCoroutine(RespawnFoodAfterDelay());
+            }
         }
     }
 
