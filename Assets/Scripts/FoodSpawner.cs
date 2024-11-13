@@ -1,36 +1,60 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FoodSpawner : MonoBehaviour
 {
-    public GameObject foodPrefab;      // Prefab de la comida
-    public Vector3 spawnAreaSize = new Vector3(50f, 0f, 50f);  // Tamaño del área donde spawneará la comida
-    public int foodCount = 10;         // Cantidad de comida a spawnear inicialmente
+    public GameObject foodPrefab;
+    public Vector3 spawnAreaSize = new Vector3(50f, 0f, 50f);
+    public int maxFoodCount = 10;
+    public float respawnTime = 5f;
+
+    private List<GameObject> spawnedFood;
 
     void Start()
     {
-        // Spawnear la cantidad de comida especificada
-        for (int i = 0; i < foodCount; i++)
+        spawnedFood = new List<GameObject>();
+        for (int i = 0; i < maxFoodCount; i++)
         {
             SpawnFood();
         }
     }
 
-    void SpawnFood()
+    void Update()
     {
-        // Generar una posición aleatoria dentro del área de spawn, con Y siempre en 0
-        Vector3 randomPosition = new Vector3(
-            Random.Range(-spawnAreaSize.x / 2, spawnAreaSize.x / 2), // Eje X
-            0f, // Mantén la comida en el plano Y=0
-            Random.Range(-spawnAreaSize.z / 2, spawnAreaSize.z / 2)  // Eje Z
-        );
-
-        // Instanciar la comida en la posición generada, asegurando que se mantenga en el plano XZ
-        Instantiate(foodPrefab, randomPosition, Quaternion.identity);
+        // Continuously check if food count is below the max and respawn if needed
+        if (spawnedFood.Count < maxFoodCount)
+        {
+            StartCoroutine(RespawnFoodAfterDelay());
+        }
     }
 
-    // Visualizar el área de spawn en el editor
+    public void SpawnFood()
+    {
+        Vector3 randomPosition = GenerateRandomPosition();
+        GameObject food = Instantiate(foodPrefab, randomPosition, Quaternion.identity);
+        spawnedFood.Add(food);
+    }
+
+    private IEnumerator RespawnFoodAfterDelay()
+    {
+        yield return new WaitForSeconds(respawnTime);
+        if (spawnedFood.Count < maxFoodCount) // Re-check to avoid over-spawning
+        {
+            SpawnFood();
+        }
+    }
+
+    private Vector3 GenerateRandomPosition()
+    {
+        return new Vector3(
+            Random.Range(-spawnAreaSize.x / 2, spawnAreaSize.x / 2),
+            0f,
+            Random.Range(-spawnAreaSize.z / 2, spawnAreaSize.z / 2)
+        ) + transform.position;
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;

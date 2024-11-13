@@ -1,202 +1,188 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class Boid : MonoBehaviour
 {
-    public float speed = 5f;  // Velocidad de movimiento
-    public float neighborDistance = 10f;  // Distancia para detectar otros boids
-    public float cohesionStrength = 1f;  // Fuerza que atrae a los boids
-    public float separationDistance = 2f;  // Distancia mínima para evitar colisiones
-    public float separationStrength = 1.5f;  // Fuerza que repele a los boids
-    public float alignmentStrength = 1f;  // Fuerza que alinea la dirección de los boids
-    public Transform hunter;  // Referencia al cazador
-    public float fleeDistance = 10f;  // Distancia mínima para que los boids huyan del cazador
-    public float fleeStrength = 2f;  // Fuerza con la que los boids huyen del cazador
-    public Vector3 velocity;  // Vector de velocidad
+    public float speed = 5f;
+    public float acceleration = 10f;
+    public float evadeBoost = 1.5f; // Boost multiplier when fleeing
+    public float neighborDistance = 10f;
+    public float cohesionStrength = 1f;
+    public float separationDistance = 2f;
+    public float separationStrength = 1.5f;
+    public float alignmentStrength = 1f;
+    public Transform hunter;
+    public float fleeDistance = 10f;
+    public float fleeStrength = 2f;
+    private Vector3 velocity;
+    private Vector3 desiredVelocity;
 
-    public float mapWidth = 50f;  // Ancho del área de movimiento
-    public float mapDepth = 50f;  // Profundidad del área de movimiento
+    public float mapWidth = 50f;
+    public float mapDepth = 50f;
 
-    // Para la detección de comida
-    public float foodDetectionRange = 15f;  // Rango para detectar la comida
-    private Transform nearestFood;  // La comida más cercana
-    public float arriveRadius = 1.5f;  // Distancia para que el Boid desacelere al llegar a la comida
-    public float foodEatenDistance = 1f;  // Distancia mínima para considerar que el boid ha llegado a la comida
+    public float foodDetectionRange = 15f;
+    private Transform nearestFood;
+    public float arriveRadius = 1.5f;
+    public float foodEatenDistance = 1f;
 
     private List<Boid> neighbors;
+    private List<Boid> closeNeighbors;
 
-    // Parámetros para suavizar decisiones
-    private float decisionCooldown = 0.3f;  // Tiempo entre decisiones
+    private float decisionCooldown = 0.3f;
     private float lastDecisionTime;
 
-    // Nueva variable para almacenar la dirección base persistente
     private Vector3 baseDirection;
-
-    // Tiempo entre cambios de dirección base
     private float baseDirectionChangeCooldown = 2f;
     private float lastBaseDirectionChangeTime;
 
     void Start()
     {
-        velocity = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized * speed;
+        velocity = RandomDirection() * speed;
         neighbors = new List<Boid>();
-
-        // Iniciar la dirección base aleatoria
-        baseDirection = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
-
+        closeNeighbors = new List<Boid>();
+        baseDirection = RandomDirection();
     }
 
     void Update()
     {
-        // Usamos un cooldown para suavizar los movimientos
         if (Time.time - lastDecisionTime > decisionCooldown)
         {
             lastDecisionTime = Time.time;
             UpdateBoidBehavior();
         }
 
-        // Movemos el boid en la dirección calculada
+        SmoothMovement();
+        WrapPosition();
+        CheckFoodProximity();
+    }
+
+    private void SmoothMovement()
+    {
+        velocity = Vector3.Lerp(velocity, desiredVelocity, acceleration * Time.deltaTime).normalized * speed;
         transform.position += velocity * Time.deltaTime;
+        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+    }
 
-        // Comportamiento de "wrapping": Si el boid sale de los límites, reaparece en el lado opuesto, pero ligeramente dentro del mapa
-        float buffer = 0.1f;  // Pequeño desplazamiento para evitar quedarse trancado en el borde
-
+    private void WrapPosition()
+    {
+        float buffer = 0.1f;
         if (transform.position.x > mapWidth / 2)
-        {
             transform.position = new Vector3(-mapWidth / 2 + buffer, transform.position.y, transform.position.z);
-        }
         else if (transform.position.x < -mapWidth / 2)
-        {
             transform.position = new Vector3(mapWidth / 2 - buffer, transform.position.y, transform.position.z);
-        }
 
         if (transform.position.z > mapDepth / 2)
-        {
             transform.position = new Vector3(transform.position.x, transform.position.y, -mapDepth / 2 + buffer);
-        }
         else if (transform.position.z < -mapDepth / 2)
-        {
             transform.position = new Vector3(transform.position.x, transform.position.y, mapDepth / 2 - buffer);
-        }
+    }
 
-        // Mantener el boid a nivel del suelo (plano XZ)
-        transform.position = new Vector3(transform.position.x, 0, transform.position.z);
-
-        // Verificar si está lo suficientemente cerca de la comida para destruirla
+    private void CheckFoodProximity()
+    {
         if (nearestFood != null && Vector3.Distance(transform.position, nearestFood.position) < foodEatenDistance)
         {
             Destroy(nearestFood.gameObject);
-            nearestFood = null;  // Para evitar que intente seguir la comida destruida
+            nearestFood = null;
         }
     }
 
     void UpdateBoidBehavior()
     {
         UpdateNeighbors();
-        DetectNearestFood();  // Detectar la comida más cercana
+        DetectNearestFood();
 
         Vector3 cohesion = Cohesion() * cohesionStrength;
         Vector3 separation = Separation() * separationStrength;
         Vector3 alignment = Alignment() * alignmentStrength;
         Vector3 flee = Vector3.zero;
 
-        // Si el cazador está cerca, los boids huyen
+        // If the hunter is close, prioritize fleeing with an evade boost
         if (Vector3.Distance(transform.position, hunter.position) < fleeDistance)
         {
-            flee = FleeFromHunter() * fleeStrength;
+            flee = FleeFromHunter() * fleeStrength * evadeBoost;
+            desiredVelocity = flee.normalized * speed; // Evade overrides other behaviors
+            return; // Skip further behavior calculations during flee
         }
 
         Vector3 moveToFood = Vector3.zero;
-        if (nearestFood != null && Vector3.Distance(hunter.position, nearestFood.position) > fleeDistance)  // Priorizar huir del cazador sobre ir a la comida
-        {
-            moveToFood = ArriveAtFood(nearestFood.position);  // Aplicamos Arrive
-        }
+        if (nearestFood != null && Vector3.Distance(hunter.position, nearestFood.position) > fleeDistance)
+            moveToFood = ArriveAtFood(nearestFood.position);
 
-        // Cambiar la dirección base cada cierto tiempo (para evitar titubeos)
         if (Time.time - lastBaseDirectionChangeTime > baseDirectionChangeCooldown)
         {
-            baseDirection = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
+            baseDirection = RandomDirection();
             lastBaseDirectionChangeTime = Time.time;
         }
 
-        // Sumamos las fuerzas de flocking, evasión, movimiento hacia la comida y la dirección base
-        Vector3 flockingDirection = (cohesion + separation + alignment + flee + moveToFood + baseDirection * 0.5f).normalized;
-        velocity = flockingDirection * speed;
+        desiredVelocity = (cohesion + separation + alignment + moveToFood + baseDirection * 0.5f).normalized * speed;
     }
 
     Vector3 ArriveAtFood(Vector3 targetPosition)
     {
-        Vector3 directionToTarget = targetPosition - transform.position;
-        float distance = directionToTarget.magnitude;
+        Vector3 direction = targetPosition - transform.position;
+        float distance = direction.magnitude;
 
         if (distance < arriveRadius)
-        {
-            float reduceSpeedFactor = distance / arriveRadius;
-            return directionToTarget.normalized * speed * reduceSpeedFactor;
-        }
-        else
-        {
-            return directionToTarget.normalized * speed;
-        }
+            return direction.normalized * speed * (distance / arriveRadius);
+        return direction.normalized * speed;
     }
 
     void UpdateNeighbors()
     {
         neighbors.Clear();
+        closeNeighbors.Clear();
         foreach (Boid boid in FindObjectsOfType<Boid>())
         {
-            if (boid != this && Vector3.Distance(transform.position, boid.transform.position) < neighborDistance)
+            if (boid != this)
             {
-                neighbors.Add(boid);
+                float distance = Vector3.Distance(transform.position, boid.transform.position);
+                if (distance < neighborDistance)
+                {
+                    neighbors.Add(boid);
+                    if (distance < separationDistance)
+                        closeNeighbors.Add(boid);
+                }
             }
         }
     }
 
     Vector3 Cohesion()
     {
-        Vector3 centerOfMass = Vector3.zero;
+        if (neighbors.Count == 0) return Vector3.zero;
+
+        Vector3 center = Vector3.zero;
         foreach (Boid neighbor in neighbors)
-        {
-            centerOfMass += neighbor.transform.position;
-        }
-        if (neighbors.Count > 0)
-        {
-            centerOfMass /= neighbors.Count;
-            return (centerOfMass - transform.position).normalized;
-        }
-        return Vector3.zero;
+            center += neighbor.transform.position;
+
+        center /= neighbors.Count;
+        return (center - transform.position).normalized;
     }
 
     Vector3 Separation()
     {
-        Vector3 separationForce = Vector3.zero;
-        foreach (Boid neighbor in neighbors)
+        if (closeNeighbors.Count == 0) return Vector3.zero;
+
+        Vector3 force = Vector3.zero;
+        foreach (Boid neighbor in closeNeighbors)
         {
-            float distance = Vector3.Distance(transform.position, neighbor.transform.position);
-            if (distance < separationDistance)
-            {
-                Vector3 fleeDirection = (transform.position - neighbor.transform.position).normalized;
-                separationForce += fleeDirection / distance;  // Mayor fuerza cuanto más cerca estén
-            }
+            Vector3 direction = transform.position - neighbor.transform.position;
+            force += direction.normalized / direction.magnitude;
         }
-        return separationForce.normalized;
+        return force.normalized;
     }
 
     Vector3 Alignment()
     {
+        if (neighbors.Count == 0) return Vector3.zero;
+
         Vector3 avgVelocity = Vector3.zero;
         foreach (Boid neighbor in neighbors)
-        {
             avgVelocity += neighbor.velocity;
-        }
-        if (neighbors.Count > 0)
-        {
-            avgVelocity /= neighbors.Count;
-            return avgVelocity.normalized;
-        }
-        return Vector3.zero;
+
+        avgVelocity /= neighbors.Count;
+        return avgVelocity.normalized;
     }
 
     void DetectNearestFood()
@@ -207,10 +193,10 @@ public class Boid : MonoBehaviour
 
         foreach (GameObject food in foodItems)
         {
-            float distanceToFood = Vector3.Distance(transform.position, food.transform.position);
-            if (distanceToFood < closestDistance && distanceToFood < foodDetectionRange)
+            float distance = Vector3.Distance(transform.position, food.transform.position);
+            if (distance < closestDistance && distance < foodDetectionRange)
             {
-                closestDistance = distanceToFood;
+                closestDistance = distance;
                 nearestFood = food.transform;
             }
         }
@@ -219,15 +205,13 @@ public class Boid : MonoBehaviour
     Vector3 FleeFromHunter()
     {
         Vector3 fleeDirection = (transform.position - hunter.position).normalized;
-
-        // Añadir un poco de aleatoriedad a la dirección de huida
-        Vector3 randomOffset = new Vector3(
-            Random.Range(-0.5f, 0.5f),
-            0,
-            Random.Range(-0.5f, 0.5f)
-        ).normalized;
-
-        fleeDirection += randomOffset;
+        Vector3 randomOffset = Random.insideUnitSphere * 0.5f;
+        fleeDirection += new Vector3(randomOffset.x, 0, randomOffset.z).normalized;
         return fleeDirection.normalized;
+    }
+
+    private Vector3 RandomDirection()
+    {
+        return new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized;
     }
 }

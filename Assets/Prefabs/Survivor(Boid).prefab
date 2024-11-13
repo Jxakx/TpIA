@@ -121,16 +121,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54af3cbaf343d984285b5e01d337853f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 8
+  speed: 9
+  acceleration: 10
+  evadeBoost: 2
   neighborDistance: 10
   cohesionStrength: 6.5
   separationDistance: 6
   separationStrength: 6
   alignmentStrength: 6.5
   hunter: {fileID: 0}
-  fleeDistance: 10
+  fleeDistance: 12
   fleeStrength: 10
-  velocity: {x: 0, y: 0, z: 0}
   mapWidth: 100
   mapDepth: 100
   foodDetectionRange: 15

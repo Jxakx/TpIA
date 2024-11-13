@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -961,7 +961,7 @@ GameObject:
   - component: {fileID: 1131816797}
   m_Layer: 0
   m_Name: FoodSpawner
-  m_TagString: Untagged
+  m_TagString: Food
   m_Icon: {fileID: -5397416234189338067, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -980,7 +980,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   foodPrefab: {fileID: 6104233312204880471, guid: af2661160f1248e4c911eb25092b93e3, type: 3}
   spawnAreaSize: {x: 90, y: 0, z: 90}
-  foodCount: 25
+  maxFoodCount: 10
+  respawnTime: 2
 --- !u!4 &1131816798
 Transform:
   m_ObjectHideFlags: 0
@@ -1807,7 +1808,7 @@ MonoBehaviour:
   - {fileID: 1167343105}
   - {fileID: 1610028407}
   - {fileID: 1794614855}
-  speed: 5
+  speed: 3
   detectionRange: 40
   energy: 70
   energyDecayRate: 2

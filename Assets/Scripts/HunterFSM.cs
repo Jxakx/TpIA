@@ -1,11 +1,12 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class HunterFSM : MonoBehaviour
 {
-    enum HunterState { Patrol, Chase, Recharge }
-    HunterState currentState = HunterState.Patrol;
+    private enum HunterState { Patrol, Chase, Recharge }
+    private HunterState currentState = HunterState.Patrol;
 
     public Transform[] waypoints;
     public float speed = 5f;
@@ -16,9 +17,15 @@ public class HunterFSM : MonoBehaviour
     public Transform rechargeStation;
 
     private int currentWaypointIndex = 0;
-    private bool movingForward = true;  // Variable para saber si está avanzando o retrocediendo en los waypoints
+    private bool movingForward = true;
 
     void Update()
+    {
+        HandleState();
+        HandleEnergyDecay();
+    }
+
+    private void HandleState()
     {
         switch (currentState)
         {
@@ -32,56 +39,50 @@ public class HunterFSM : MonoBehaviour
                 Recharge();
                 break;
         }
-
-        // Pérdida de energía
-        if (currentState != HunterState.Recharge)
-        {
-            energy -= energyDecayRate * Time.deltaTime;
-            if (energy <= 0)
-            {
-                ChangeState(HunterState.Recharge);
-            }
-        }
     }
 
-    void Patrol()
+    private void Patrol()
     {
         Transform targetWaypoint = waypoints[currentWaypointIndex];
         MoveTowards(targetWaypoint.position);
 
-        if (Vector3.Distance(transform.position, targetWaypoint.position) < 1f)
+        if (IsNear(targetWaypoint.position))
         {
-            // Si está avanzando, incrementa el índice, si está retrocediendo, decrementa
-            if (movingForward)
-            {
-                currentWaypointIndex++;
-                if (currentWaypointIndex >= waypoints.Length)  // Si llega al último waypoint, cambia de dirección
-                {
-                    currentWaypointIndex = waypoints.Length - 1;
-                    movingForward = false;
-                }
-            }
-            else
-            {
-                currentWaypointIndex--;
-                if (currentWaypointIndex < 0)  // Si llega al primer waypoint, cambia de dirección
-                {
-                    currentWaypointIndex = 0;
-                    movingForward = true;
-                }
-            }
+            UpdateWaypointIndex();
         }
 
-        Boid closestBoid = DetectBoids();
+        Boid closestBoid = DetectBoid();
         if (closestBoid != null)
         {
             ChangeState(HunterState.Chase);
         }
     }
 
-    void Chase()
+    private void UpdateWaypointIndex()
     {
-        Boid closestBoid = DetectBoids();
+        if (movingForward)
+        {
+            currentWaypointIndex++;
+            if (currentWaypointIndex >= waypoints.Length)
+            {
+                currentWaypointIndex = waypoints.Length - 1;
+                movingForward = false;
+            }
+        }
+        else
+        {
+            currentWaypointIndex--;
+            if (currentWaypointIndex < 0)
+            {
+                currentWaypointIndex = 0;
+                movingForward = true;
+            }
+        }
+    }
+
+    private void Chase()
+    {
+        Boid closestBoid = DetectBoid();
         if (closestBoid != null)
         {
             MoveTowards(closestBoid.transform.position);
@@ -92,39 +93,64 @@ public class HunterFSM : MonoBehaviour
         }
     }
 
-    void Recharge()
+    private void Recharge()
     {
         MoveTowards(rechargeStation.position);
-        if (Vector3.Distance(transform.position, rechargeStation.position) < 1f)
+        if (IsNear(rechargeStation.position))
         {
             energy += rechargeRate * Time.deltaTime;
             if (energy >= 100f)
             {
+                energy = 100f;
                 ChangeState(HunterState.Patrol);
             }
         }
     }
 
-    Boid DetectBoids()
+    private Boid DetectBoid()
     {
         Boid[] boids = FindObjectsOfType<Boid>();
+        Boid closestBoid = null;
+        float closestDistance = Mathf.Infinity;
+
         foreach (Boid boid in boids)
         {
-            if (Vector3.Distance(transform.position, boid.transform.position) < detectionRange)
+            float distance = Vector3.Distance(transform.position, boid.transform.position);
+            if (distance < detectionRange && distance < closestDistance)
             {
-                return boid;
+                closestDistance = distance;
+                closestBoid = boid;
             }
         }
-        return null;
+
+        return closestBoid;
     }
 
-    void MoveTowards(Vector3 targetPosition)
+    private void MoveTowards(Vector3 targetPosition)
     {
         Vector3 direction = (targetPosition - transform.position).normalized;
         transform.position += direction * speed * Time.deltaTime;
     }
 
-    void ChangeState(HunterState newState)
+    private bool IsNear(Vector3 position)
+    {
+        return Vector3.Distance(transform.position, position) < 1f;
+    }
+
+    private void HandleEnergyDecay()
+    {
+        if (currentState != HunterState.Recharge)
+        {
+            energy -= energyDecayRate * Time.deltaTime;
+            if (energy <= 0)
+            {
+                energy = 0;
+                ChangeState(HunterState.Recharge);
+            }
+        }
+    }
+
+    private void ChangeState(HunterState newState)
     {
         currentState = newState;
     }
