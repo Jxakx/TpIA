@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Joaco.unity
+    path: Assets/Scenes/TP1.unity
     guid: b35bb5f47f92fa24c9e7ace2a47f99a4
   m_configObjects: {}
