@@ -104,6 +104,17 @@ public class PlayerEnemies : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, _obstacleDist);
+
+        if(Pathfinding.OnSight(transform.position, _target.position, LayerMask.GetMask("Obstacle")))
+        {
+            Gizmos.color = Color.green;
+        }
+        else
+        {
+            Gizmos.color = Color.red;
+        }
+
+        Gizmos.DrawLine(transform.position, _target.position);
     }
 
 }

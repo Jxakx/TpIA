@@ -11,6 +11,8 @@ public class Pathfinding : MonoBehaviour
 
     public List<Node> nodes = new List<Node>();
 
+    [SerializeField] private LayerMask _obstacleMask;
+
     private void Awake()
     {
         Instance = this;
@@ -48,11 +50,22 @@ public class Pathfinding : MonoBehaviour
 
         var finalPath = new List<Node>();
         actualNode = endNode;
+        var actualPreviousNode = actualNode.previousNode;
+        finalPath.Add(actualNode);
 
-        while(actualNode != null && actualNode != starNode && actualNode.previousNode != null)
+        while(actualNode != null && actualNode != starNode && actualNode.previousNode != null && actualPreviousNode.previousNode != null)
         {
-            finalPath.Add(actualNode);
-            actualNode = actualNode.previousNode;
+            if(OnSight(actualNode.transform.position, actualPreviousNode.previousNode.transform.position, _obstacleMask))
+            {
+                actualPreviousNode = actualPreviousNode.previousNode;
+            }
+            else
+            {
+                finalPath.Add(actualNode);
+                actualNode = actualNode.previousNode;
+                actualPreviousNode = actualPreviousNode.previousNode;
+            }
+            
         }
 
         finalPath.Reverse();
@@ -66,13 +79,21 @@ public class Pathfinding : MonoBehaviour
 
         for (var i = 1; i < nodes.Count; i++)
         {
-            if (closestDistance > Vector3.Distance(position, nodes[i].transform.position))
+            if (closestDistance > Vector3.Distance(position, nodes[i].transform.position) && OnSight(nodes[i].transform.position,position, _obstacleMask))
             {
                 closestNode = nodes[i];
-                closestDistance = Vector3.Distance(position, closestNode.transform.position);                
+                closestDistance = Vector3.Distance(position, closestNode.transform.position);     
             }
         }
 
         return closestNode;
     }
+
+    public static bool OnSight(Vector3 from, Vector3 to, LayerMask obstacleMask)
+    {
+        var dir = to - from;
+        return !Physics.Raycast(from, dir, dir.magnitude, obstacleMask);
+    }
+
+    
 }
