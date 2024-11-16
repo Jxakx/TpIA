@@ -31,7 +31,7 @@ public class Node : MonoBehaviour
         {
             var node = collider.GetComponent<Node>();
             
-            if(node != null && node != this)
+            if(node != null && node != this && Pathfinding.OnSight(transform.position,node.transform.position,Pathfinding.Instance._obstacleMask))
             {
                 _neighbours.Add(node);
             }

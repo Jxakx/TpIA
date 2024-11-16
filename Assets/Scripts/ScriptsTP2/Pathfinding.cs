@@ -11,7 +11,7 @@ public class Pathfinding : MonoBehaviour
 
     public List<Node> nodes = new List<Node>();
 
-    [SerializeField] private LayerMask _obstacleMask;
+    public LayerMask _obstacleMask;
 
     private void Awake()
     {
