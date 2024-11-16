@@ -20,6 +20,8 @@ public class PlayerEnemies : MonoBehaviour
 
     private Action followingAction = delegate { };
 
+    private List<Node> _path = new List<Node>();
+
     private void Update()
     {
         followingAction();
@@ -36,7 +38,23 @@ public class PlayerEnemies : MonoBehaviour
 
     private void PathFindingState()
     {
-        
+        if (Vector3.Distance(transform.position, _target.position) < .5f)
+        {
+            return;
+        }
+
+        if(_path.Count <= 0)
+        {
+            _path = Pathfinding.Instance.GetPath(Pathfinding.Instance.getClosestNode(transform.position), Pathfinding.Instance.getClosestNode(_target.position));
+        }
+
+        var dir = _path[0].transform.position - transform.position;
+        transform.position += dir.normalized * speed * Time.deltaTime;
+
+        if (dir.magnitude < .5f)
+        {
+            _path.RemoveAt(0);
+        }
     }
 
     #region Obstacle Region

@@ -36,6 +36,11 @@ public class Node : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        Pathfinding.Instance.nodes.Add(this);
+    }
+
     public void SetHeuristic(Vector3 from, Vector3 target, float previousheuristic)
     {
         heuristic = previousheuristic + Vector3.Distance(from, transform.position) + 
