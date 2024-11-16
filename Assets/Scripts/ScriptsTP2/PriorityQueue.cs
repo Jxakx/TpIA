@@ -5,17 +5,18 @@ public class PriorityQueue
     private Dictionary<Node, float> _priorityQueue = new Dictionary<Node, float>();
 
     //Agregar objetos a la Queue
-    public void Enqueue (Node node, float heuristic)
+    public void Enqueue(Node node, float heuristic)
     {
         if (!_priorityQueue.ContainsKey(node))
         {
-            _priorityQueue[node] = heuristic;
+            _priorityQueue[node] = heuristic; // Agrega si no existe
         }
         else
         {
-            _priorityQueue.Add(node, heuristic);
+            _priorityQueue[node] = heuristic; // Actualiza si ya existe
         }
     }
+
 
     //Quitar objetos a la Queue
     public Node Dequeue()
