@@ -25,6 +25,8 @@ public class Node : MonoBehaviour
     {
         var colliders = Physics.OverlapSphere(transform.position, detectionRadius, LayerMask.GetMask("Node"));
 
+        heuristic = 9999;
+
         foreach (var collider in colliders)
         {
             var node = collider.GetComponent<Node>();

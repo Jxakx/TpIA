@@ -21,6 +21,8 @@ public class Pathfinding : MonoBehaviour
         _closedNodes.Clear();
         _openNodes.Clear();
 
+        starNode.Heuristic = 0;
+
         var actualNode = starNode;
 
         while (actualNode != null && actualNode != endNode)
