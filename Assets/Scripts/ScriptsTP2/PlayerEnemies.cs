@@ -46,7 +46,14 @@ public class PlayerEnemies : MonoBehaviour
         if(_path.Count <= 0)
         {
             _path = Pathfinding.Instance.GetPath(Pathfinding.Instance.getClosestNode(transform.position), Pathfinding.Instance.getClosestNode(_target.position));
+
+            if (_path.Count == 0)
+            {
+                return;
+            }
         }
+
+        
 
         var dir = _path[0].transform.position - transform.position;
         transform.position += dir.normalized * speed * Time.deltaTime;
