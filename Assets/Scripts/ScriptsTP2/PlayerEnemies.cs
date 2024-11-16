@@ -30,7 +30,7 @@ public class PlayerEnemies : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.E))
         {
-            followingAction = PathfindingState;
+            followingAction = PathFindingState;
         }
     }
 
@@ -38,6 +38,8 @@ public class PlayerEnemies : MonoBehaviour
     {
         
     }
+
+    #region Obstacle Region
 
     public void ObstacleAvoidanceState()
     {
@@ -56,19 +58,27 @@ public class PlayerEnemies : MonoBehaviour
     public Vector3 ObstacleAvoidance()
     {
         _avoidanceDir = Vector3.zero;
-        var obstacles = Physics.OverlapSphere(transform.position, _obstacleDist, (int)_obstacleMask);
+        var obstacles = Physics.OverlapSphere(transform.position, _obstacleDist, _obstacleMask);
 
         if (obstacles.Length > 0)
         {
             foreach (var obstacle in obstacles)
             {
                 var dir = transform.position - obstacle.transform.position;
-                _avoidanceDir += dir.normalized * (_obstacleDist - dir.magnitude);
+                _avoidanceDir += dir.normalized;
             }
         }
 
         _avoidanceDir.y = 0;
         return _avoidanceDir;
+    }
+
+
+    #endregion
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, _obstacleDist);
     }
 
 }
