@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PlayerEnemies : MonoBehaviour
 {
     [SerializeField] private float _obstacleDist;
@@ -22,6 +23,8 @@ public class PlayerEnemies : MonoBehaviour
 
     private List<Node> _path = new List<Node>();
 
+    [SerializeField] private float viewRange;
+    [SerializeField] private float viewAngle;
     private void Update()
     {
         followingAction();
@@ -101,11 +104,12 @@ public class PlayerEnemies : MonoBehaviour
 
     #endregion
 
+    #region OnSight
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, _obstacleDist);
 
-        if(Pathfinding.OnSight(transform.position, _target.position, LayerMask.GetMask("Obstacle")))
+        if (Pathfinding.OnSight(transform.position, _target.position, LayerMask.GetMask("Obstacle")))
         {
             Gizmos.color = Color.green;
         }
@@ -114,7 +118,35 @@ public class PlayerEnemies : MonoBehaviour
             Gizmos.color = Color.red;
         }
 
+        //Gizmos.DrawLine(transform.position, _target.position);
+
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(transform.position, viewRange);
+
+        var dirA = DirFromAngle(viewAngle / 2 + transform.eulerAngles.y);
+        var dirB = DirFromAngle(-viewAngle / 2 + transform.eulerAngles.y);
+
+        Gizmos.DrawLine(transform.position, transform.position + dirA * viewRange);
+        Gizmos.DrawLine(transform.position, transform.position + dirB * viewRange);
+
+        if(Pathfinding.FieldOfView(transform.position, transform.forward, _target.position, viewAngle, LayerMask.GetMask("Obstacle"))
+            && Vector3.Distance(transform.position, _target.position) < viewRange)
+        {
+            Gizmos.color = Color.blue;
+        }
+        else
+        {
+            Gizmos.color = Color.yellow;
+        }
+
         Gizmos.DrawLine(transform.position, _target.position);
     }
+
+    private Vector3 DirFromAngle(float angle)
+    {
+        return new Vector3(Mathf.Sin(angle * Mathf.Deg2Rad), 0, MathF.Cos(angle * Mathf.Deg2Rad));
+    }
+    #endregion
+
 
 }

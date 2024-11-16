@@ -89,11 +89,24 @@ public class Pathfinding : MonoBehaviour
         return closestNode;
     }
 
+    //Line of sight
     public static bool OnSight(Vector3 from, Vector3 to, LayerMask obstacleMask)
     {
         var dir = to - from;
         return !Physics.Raycast(from, dir, dir.magnitude, obstacleMask);
     }
 
+    //Field of view
+    public static bool FieldOfView(Vector3 from, Vector3 forward, Vector3 target, float viewAngle, LayerMask obstacleMask)
+    {
+        var dir = target - from;
+
+        if(Vector3.Angle(forward, dir) < viewAngle / 2 && OnSight(from, target, obstacleMask))
+        {
+            return true;
+        }
+
+        return false;
+    }
     
 }
