@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -980,8 +980,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   foodPrefab: {fileID: 6104233312204880471, guid: af2661160f1248e4c911eb25092b93e3, type: 3}
   spawnAreaSize: {x: 90, y: 0, z: 90}
-  maxFoodCount: 10
-  respawnTime: 2
+  foodCount: 25
+  spawnInterval: 1.5
 --- !u!4 &1131816798
 Transform:
   m_ObjectHideFlags: 0
@@ -1231,8 +1231,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1360046760}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.29292524, y: 0.63581437, z: -0.28936356, w: -0.65284276}
-  m_LocalPosition: {x: 34.7, y: 33.8, z: 1.2}
+  m_LocalRotation: {x: 0.26940885, y: -0.6515388, z: 0.26866102, w: 0.65630585}
+  m_LocalPosition: {x: 68.52504, y: 48.285316, z: 2.4777174}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1808,7 +1808,7 @@ MonoBehaviour:
   - {fileID: 1167343105}
   - {fileID: 1610028407}
   - {fileID: 1794614855}
-  speed: 3
+  speed: 5
   detectionRange: 40
   energy: 70
   energyDecayRate: 2

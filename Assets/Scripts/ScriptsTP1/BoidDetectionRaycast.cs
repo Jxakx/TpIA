@@ -4,21 +4,19 @@ using UnityEngine;
 
 public class BoidDetectionRaycast : MonoBehaviour
 {
-    public Transform cazador;  // Transform del cazador
+    public Transform cazador;
     public float detectionRange = 10f;  // Rango de detección del raycast
-    public LayerMask cazadorLayer;  // Layer del cazador para el raycast
-    public LayerMask obstacleLayer;  // Layer de obstáculos que podrían bloquear el raycast
+    public LayerMask cazadorLayer;  
+    public LayerMask obstacleLayer; 
 
     void Update()
     {
-        // Dirección hacia el cazador
         Vector3 directionToCazador = (cazador.position - transform.position).normalized;
 
         // Hacer un raycast en la dirección del cazador
         RaycastHit hit;
         if (Physics.Raycast(transform.position, directionToCazador, out hit, detectionRange, cazadorLayer | obstacleLayer))
         {
-            // Si el raycast detecta al cazador sin obstáculos en el medio
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Cazador"))
             {
                 // Activar la evasión si el cazador es detectado
@@ -33,7 +31,6 @@ public class BoidDetectionRaycast : MonoBehaviour
         transform.position += fleeDirection * Time.deltaTime * 5f;  // Ajusta la velocidad de huida
     }
 
-    // Visualizar el raycast en el editor
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
