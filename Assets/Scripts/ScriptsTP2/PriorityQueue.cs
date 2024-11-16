@@ -52,4 +52,11 @@ public class PriorityQueue
     {
         _priorityQueue.Clear();
     }
+
+    public bool Contains(Node node)
+    {
+        return _priorityQueue.ContainsKey(node);
+    }
+
+
 }

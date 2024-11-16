@@ -27,7 +27,24 @@ public class Pathfinding : MonoBehaviour
                     neighbour.Heuristic = heuristic;
                     neighbour.previousNode = actualNode;
                 }
+
+                _openNodes.Enqueue(neighbour, neighbour.Heuristic);
             }
+
+            _closedNodes.Add(actualNode);
+            actualNode = _openNodes.Dequeue();
         }
+
+        var finalPath = new List<Node>();
+        actualNode = endNode;
+
+        while(actualNode != null && actualNode != starNode && actualNode.previousNode != null)
+        {
+            finalPath.Add(actualNode);
+            actualNode = actualNode.previousNode;
+        }
+
+        finalPath.Reverse();
+        return finalPath;
     }
 }
