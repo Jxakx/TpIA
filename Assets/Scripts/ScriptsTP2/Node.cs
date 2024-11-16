@@ -8,12 +8,18 @@ public class Node : MonoBehaviour
 {
     public float heuristic;
 
-    public float Heuristic { get { return heuristic; } }
+    public float Heuristic 
+    { 
+        set { heuristic = value; } 
+        get { return heuristic; }
+    }
 
     [SerializeField] private List<Node> _neighbours = new();
-    [SerializeField] private float detectionRadius;
 
-    public List<Node> Neighbours { get; { return _neighbours; } }
+    [SerializeField] private float detectionRadius;
+    public List<Node> Neighbours { get { return _neighbours; } }
+
+    public Node previousNode;
 
     private void Awake()
     {
@@ -33,7 +39,7 @@ public class Node : MonoBehaviour
     public void SetHeuristic(Vector3 from, Vector3 target, float previousheuristic)
     {
         heuristic = previousheuristic + Vector3.Distance(from, transform.position) + 
-            Vector3.Distance(transform.position);
+            Vector3.Distance(transform.position, target);
     }
 
     private void OnDrawGizmos()

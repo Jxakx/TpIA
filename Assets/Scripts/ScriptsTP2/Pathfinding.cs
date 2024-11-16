@@ -20,7 +20,13 @@ public class Pathfinding : MonoBehaviour
             {
                 if (_closedNodes.Contains(neighbour)) continue;
 
-                var heuristic = actualNode.heuristic + 1 + Vector3.Distance(neighbour.transform.position, endNode.transform.position);
+                var heuristic = actualNode.Heuristic + 1 + Vector3.Distance(neighbour.transform.position, endNode.transform.position);
+
+                if(neighbour.Heuristic > heuristic)
+                {
+                    neighbour.Heuristic = heuristic;
+                    neighbour.previousNode = actualNode;
+                }
             }
         }
     }
