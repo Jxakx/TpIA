@@ -10,44 +10,38 @@ public class PlayerEnemies : MonoBehaviour
     [SerializeField] private LayerMask _obstacleMask;
     private Vector3 _avoidanceDir;
 
-    [SerializeField] private Transform _target; // Jugador o objetivo
-    [SerializeField] private float _speed; // Velocidad de movimiento
-    [SerializeField] private float rotationSpeed; // Velocidad de rotación
+    [SerializeField] private Transform _target; 
+    [SerializeField] private float _speed; 
+    [SerializeField] private float rotationSpeed; 
     [SerializeField, Range(0f, 1f)] private float seekWeight = 0.5f;
     [SerializeField, Range(0f, 1f)] private float obstacleWeight = 0.743f;
 
-    [SerializeField] private float viewRange = 10f; // Distancia de visión configurable
-    [SerializeField] private float viewAngle = 90f; // Ángulo de visión configurable
-    [SerializeField] private List<Transform> _waypoints; // Nodos para patrullaje
+    [SerializeField] private float viewRange = 10f; 
+    [SerializeField] private float viewAngle = 90f; 
+    [SerializeField] private List<Transform> _waypoints;
 
-    private Action _followingAction = delegate { };
-    private List<Node> _path = new List<Node>();
     private Vector3 _desiredDir;
 
     // Máquina de estados
     public StateMachine StateMachine { get; private set; } = new StateMachine();
 
     // Propiedades públicas
-    public Transform Player => _target; // Referencia al objetivo
-    public float Speed => _speed; // Velocidad de movimiento
-    public List<Transform> Waypoints => _waypoints; // Nodos para patrullaje
+    public Transform Player => _target; 
+    public float Speed => _speed; 
+    public List<Transform> Waypoints => _waypoints; 
 
     private void Start()
     {
-        // Inicializa la máquina de estados en el estado de patrullaje
         StateMachine.ChangeState(new PatrolState(), this);
     }
 
     private void Update()
     {
-        // Actualizar la lógica del FSM en cada frame
         StateMachine.Update(this);
     }
 
-    /// <summary>
-    /// Comprueba si el jugador está en el campo de visión del NPC.
-    /// </summary>
-    /// <returns>True si el jugador está visible y dentro de la distancia y ángulo configurados, false en caso contrario.</returns>
+
+    //Comprueba si el jugador está en el campo de visión del NPC.
     public bool IsPlayerInSight()
     {
         // Calcula la dirección hacia el jugador
@@ -69,42 +63,9 @@ public class PlayerEnemies : MonoBehaviour
 
         return false;
     }
+    
 
-    /// <summary>
-    /// Lógica del estado de pathfinding.
-    /// </summary>
-    private void PathFindingState()
-    {
-        if (Vector3.Distance(transform.position, _target.position) < 0.5f)
-        {
-            return;
-        }
-
-        if (_path.Count <= 0)
-        {
-            _path = Pathfinding.Instance.GetPath(
-                Pathfinding.Instance.getClosestNode(transform.position),
-                Pathfinding.Instance.getClosestNode(_target.position)
-            );
-
-            if (_path.Count == 0)
-            {
-                return;
-            }
-        }
-
-        Vector3 dir = _path[0].transform.position - transform.position;
-        transform.position += dir.normalized * Speed * Time.deltaTime;
-
-        if (dir.magnitude < 0.5f)
-        {
-            _path.RemoveAt(0);
-        }
-    }
-
-    /// <summary>
-    /// Lógica del estado de evasión de obstáculos.
-    /// </summary>
+    //evasión de obstáculos.
     public void ObstacleAvoidanceState()
     {
         _desiredDir = Seek().normalized * seekWeight + ObstacleAvoidance().normalized * obstacleWeight;
