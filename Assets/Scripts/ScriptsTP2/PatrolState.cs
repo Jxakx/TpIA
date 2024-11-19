@@ -8,7 +8,6 @@ public class PatrolState : State
 
     public override void EnterState(PlayerEnemies enemy)
     {
-        // Inicia el patrullaje
         Debug.Log("Iniciando Patrullaje");
     }
 
@@ -16,18 +15,17 @@ public class PatrolState : State
     {
         if (enemy.Waypoints.Count == 0) return;
 
-        // Moverse hacia el siguiente waypoint
+        // Moverse hacia el waypoint actual con rotación
         Transform waypoint = enemy.Waypoints[_currentWaypointIndex];
-        Vector3 direction = waypoint.position - enemy.transform.position;
-        enemy.transform.position += direction.normalized * enemy.Speed * Time.deltaTime;
+        enemy.MoveTowards(waypoint.position);
 
-        // Si alcanza el waypoint, pasa al siguiente
-        if (direction.magnitude < 0.5f)
+        // Cambiar al siguiente waypoint si alcanza el actual
+        if (Vector3.Distance(enemy.transform.position, waypoint.position) < 0.5f)
         {
             _currentWaypointIndex = (_currentWaypointIndex + 1) % enemy.Waypoints.Count;
         }
 
-        // Cambiar de estado si detecta al jugador
+        // Cambiar al estado de persecución si detecta al jugador
         if (enemy.IsPlayerInSight())
         {
             enemy.StateMachine.ChangeState(new ChaseState(), enemy);
@@ -39,4 +37,3 @@ public class PatrolState : State
         Debug.Log("Saliendo de Patrullaje");
     }
 }
-

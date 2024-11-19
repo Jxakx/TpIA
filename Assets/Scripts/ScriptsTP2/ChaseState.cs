@@ -17,8 +17,8 @@ public class ChaseState : State
             return;
         }
 
-        Vector3 direction = enemy.Player.position - enemy.transform.position;
-        enemy.transform.position += direction.normalized * enemy.Speed * Time.deltaTime;
+        // Moverse hacia el jugador con rotación
+        enemy.MoveTowards(enemy.Player.position);
     }
 
     public override void ExitState(PlayerEnemies enemy)
@@ -26,4 +26,3 @@ public class ChaseState : State
         Debug.Log("Saliendo de Persecución");
     }
 }
-
