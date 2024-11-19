@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2314,12 +2314,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
-  rotationSpeed: 2
-  speed: 5
-  seekWeight: 0.6
-  obstacleWeight: 0.6
+  _speed: 0
+  rotationSpeed: 0
+  seekWeight: 0.5
+  obstacleWeight: 0.743
   viewRange: 4.7
   viewAngle: 90
+  _waypoints: []
 --- !u!1 &824623018
 GameObject:
   m_ObjectHideFlags: 0
@@ -2482,12 +2483,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
-  rotationSpeed: 2
-  speed: 5
-  seekWeight: 0.6
-  obstacleWeight: 0.6
+  _speed: 0
+  rotationSpeed: 0
+  seekWeight: 0.5
+  obstacleWeight: 0.743
   viewRange: 4.7
   viewAngle: 90
+  _waypoints:
+  - {fileID: 962413992}
+  - {fileID: 1546160609}
+  - {fileID: 752317737}
+  - {fileID: 1998502284}
 --- !u!1 &955932102
 GameObject:
   m_ObjectHideFlags: 0
@@ -3418,17 +3424,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e8acef45b12054aac93ea758955784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _obstacleDist: 3
+  _obstacleDist: 0
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
-  rotationSpeed: 2
-  speed: 5
-  seekWeight: 0.6
-  obstacleWeight: 0.6
+  _speed: 0
+  rotationSpeed: 0
+  seekWeight: 0.5
+  obstacleWeight: 0.743
   viewRange: 4.7
   viewAngle: 90
+  _waypoints: []
 --- !u!1 &1314295775
 GameObject:
   m_ObjectHideFlags: 0
@@ -4791,12 +4798,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
-  rotationSpeed: 2
-  speed: 5
-  seekWeight: 0.6
-  obstacleWeight: 0.6
+  _speed: 0
+  rotationSpeed: 0
+  seekWeight: 0.5
+  obstacleWeight: 0.743
   viewRange: 4.71
   viewAngle: 90
+  _waypoints: []
 --- !u!1 &1998502283
 GameObject:
   m_ObjectHideFlags: 0
@@ -5157,7 +5165,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -22.96
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5165,7 +5173,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.71
+      value: 27.5
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5211,8 +5219,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 963194228}
   - {fileID: 705507995}
+  - {fileID: 8846040465606918199}
+  - {fileID: 23881652}
   - {fileID: 1111101413}
   - {fileID: 824623019}
-  - {fileID: 23881652}
   - {fileID: 36589405}
-  - {fileID: 8846040465606918199}
