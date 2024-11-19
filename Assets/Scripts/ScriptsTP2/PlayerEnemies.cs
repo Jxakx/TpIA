@@ -16,8 +16,8 @@ public class PlayerEnemies : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float seekWeight = 0.5f;
     [SerializeField, Range(0f, 1f)] private float obstacleWeight = 0.743f;
 
-    [SerializeField] private float viewRange; // Rango de visión
-    [SerializeField] private float viewAngle; // Ángulo de visión
+    [SerializeField] private float viewRange = 10f; // Distancia de visión configurable
+    [SerializeField] private float viewAngle = 90f; // Ángulo de visión configurable
     [SerializeField] private List<Transform> _waypoints; // Nodos para patrullaje
 
     private Action _followingAction = delegate { };
@@ -42,35 +42,26 @@ public class PlayerEnemies : MonoBehaviour
     {
         // Actualizar la lógica del FSM en cada frame
         StateMachine.Update(this);
-
-        // Depuración manual (opcional)
-        if (Input.GetKey(KeyCode.Q))
-        {
-            _followingAction = ObstacleAvoidanceState;
-        }
-        else if (Input.GetKey(KeyCode.E))
-        {
-            _followingAction = PathFindingState;
-        }
-
-        _followingAction();
     }
 
     /// <summary>
     /// Comprueba si el jugador está en el campo de visión del NPC.
     /// </summary>
-    /// <returns>True si el jugador está visible, false en caso contrario.</returns>
+    /// <returns>True si el jugador está visible y dentro de la distancia y ángulo configurados, false en caso contrario.</returns>
     public bool IsPlayerInSight()
     {
-        Vector3 dirToPlayer = (Player.position - transform.position).normalized;
+        // Calcula la dirección hacia el jugador
+        Vector3 dirToPlayer = (_target.position - transform.position).normalized;
 
         // Comprueba si el jugador está dentro del ángulo de visión
         if (Vector3.Angle(transform.forward, dirToPlayer) < viewAngle / 2)
         {
-            float distanceToPlayer = Vector3.Distance(transform.position, Player.position);
+            // Calcula la distancia al jugador
+            float distanceToPlayer = Vector3.Distance(transform.position, _target.position);
 
-            // Comprueba si hay línea de visión (sin obstáculos)
-            if (!Physics.Raycast(transform.position, dirToPlayer, distanceToPlayer, _obstacleMask))
+            // Comprueba si está dentro del rango de visión y sin obstáculos
+            if (distanceToPlayer <= viewRange &&
+                !Physics.Raycast(transform.position, dirToPlayer, distanceToPlayer, _obstacleMask))
             {
                 return true;
             }
@@ -148,19 +139,21 @@ public class PlayerEnemies : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, _obstacleDist);
+        Gizmos.color = Color.white;
 
-        Gizmos.color = IsPlayerInSight() ? Color.green : Color.red;
+        // Dibuja el rango de visión
         Gizmos.DrawWireSphere(transform.position, viewRange);
 
-        var dirA = DirFromAngle(viewAngle / 2 + transform.eulerAngles.y);
-        var dirB = DirFromAngle(-viewAngle / 2 + transform.eulerAngles.y);
+        // Dibuja las líneas del ángulo de visión
+        Vector3 dirA = DirFromAngle(viewAngle / 2 + transform.eulerAngles.y);
+        Vector3 dirB = DirFromAngle(-viewAngle / 2 + transform.eulerAngles.y);
 
         Gizmos.DrawLine(transform.position, transform.position + dirA * viewRange);
         Gizmos.DrawLine(transform.position, transform.position + dirB * viewRange);
 
-        Gizmos.color = IsPlayerInSight() ? Color.blue : Color.yellow;
-        Gizmos.DrawLine(transform.position, _target.position);
+        // Cambia de color si el jugador está en el rango de visión
+        Gizmos.color = IsPlayerInSight() ? Color.green : Color.red;
+        Gizmos.DrawWireSphere(transform.position, viewRange);
     }
 
     private Vector3 DirFromAngle(float angle)
