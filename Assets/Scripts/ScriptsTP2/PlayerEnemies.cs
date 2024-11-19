@@ -12,7 +12,7 @@ public class PlayerEnemies : MonoBehaviour
 
     [SerializeField] private Transform _target; 
     [SerializeField] private float _speed; 
-    [SerializeField] private float rotationSpeed; 
+    [SerializeField] private float rotationSpeed; // Velocidad de rotación
     [SerializeField, Range(0f, 1f)] private float seekWeight = 0.5f;
     [SerializeField, Range(0f, 1f)] private float obstacleWeight = 0.743f;
 
@@ -20,13 +20,10 @@ public class PlayerEnemies : MonoBehaviour
     [SerializeField] private float viewAngle = 90f; 
     [SerializeField] private List<Transform> _waypoints;
 
-
     private Vector3 _desiredDir;
 
-    // Máquina de estados
     public StateMachine StateMachine { get; private set; } = new StateMachine();
 
-    // Propiedades públicas
     public Transform Player => _target; 
     public float Speed => _speed; 
     public List<Transform> Waypoints => _waypoints; 
@@ -41,20 +38,14 @@ public class PlayerEnemies : MonoBehaviour
         StateMachine.Update(this);
     }
 
-
-    //Comprueba si el jugador está en el campo de visión del NPC.
     public bool IsPlayerInSight()
     {
-        // Calcula la dirección hacia el jugador
         Vector3 dirToPlayer = (_target.position - transform.position).normalized;
 
-        // Comprueba si el jugador está dentro del ángulo de visión
         if (Vector3.Angle(transform.forward, dirToPlayer) < viewAngle / 2)
         {
-            // Calcula la distancia al jugador
             float distanceToPlayer = Vector3.Distance(transform.position, _target.position);
 
-            // Comprueba si está dentro del rango de visión y sin obstáculos
             if (distanceToPlayer <= viewRange &&
                 !Physics.Raycast(transform.position, dirToPlayer, distanceToPlayer, _obstacleMask))
             {
@@ -64,14 +55,12 @@ public class PlayerEnemies : MonoBehaviour
 
         return false;
     }
-    
+ 
 
-    //evasión de obstáculos.
+    // Evasión de obstáculos
     public void ObstacleAvoidanceState()
     {
         _desiredDir = Seek().normalized * seekWeight + ObstacleAvoidance().normalized * obstacleWeight;
-        transform.forward = Vector3.Lerp(transform.forward, _desiredDir, rotationSpeed * Time.deltaTime);
-        transform.position += transform.forward * Speed * Time.deltaTime;
     }
 
     public Vector3 Seek()
