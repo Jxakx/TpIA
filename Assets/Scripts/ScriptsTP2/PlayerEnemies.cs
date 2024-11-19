@@ -29,8 +29,11 @@ public class PlayerEnemies : MonoBehaviour
     public float Speed => _speed;
     public List<Transform> Waypoints => _waypoints;
 
+    public Node lastVisitedNode; // Nodo visitado más recientemente
+
     private void Start()
     {
+        lastVisitedNode = Pathfinding.Instance.getClosestNode(transform.position);
         StateMachine.ChangeState(new PatrolState(), this);
     }
 
@@ -89,10 +92,6 @@ public class PlayerEnemies : MonoBehaviour
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
-
-    /// <summary>
-    /// Estado de Pathfinder, calcula la ruta usando A* y la sigue.
-    /// </summary>
     private void PathFindingState()
     {
         if (Vector3.Distance(transform.position, _target.position) < .5f)
@@ -121,7 +120,15 @@ public class PlayerEnemies : MonoBehaviour
         {
             _path.RemoveAt(0);
         }
+
+        if (_path.Count > 0 && Vector3.Distance(transform.position, _path[0].transform.position) < 0.5f)
+        {
+            lastVisitedNode = _path[0]; // Guarda el nodo alcanzado
+            _path.RemoveAt(0);
+        }
+
     }
+
 
     /// <summary>
     /// Evasión de obstáculos.
