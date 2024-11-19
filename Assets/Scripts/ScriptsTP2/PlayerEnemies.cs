@@ -21,6 +21,7 @@ public class PlayerEnemies : MonoBehaviour
     [SerializeField] private List<Transform> _waypoints;
 
     private Vector3 _desiredDir;
+    private List<Node> _path = new List<Node>();
 
     public StateMachine StateMachine { get; private set; } = new StateMachine();
 
@@ -86,6 +87,39 @@ public class PlayerEnemies : MonoBehaviour
         {
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
+    }
+
+    /// <summary>
+    /// Estado de Pathfinder, calcula la ruta usando A* y la sigue.
+    /// </summary>
+    private void PathFindingState()
+    {
+        if (Vector3.Distance(transform.position, _target.position) < .5f)
+        {
+            return;
+        }
+
+        if (_path.Count <= 0)
+        {
+            _path = Pathfinding.Instance.GetPath(
+                Pathfinding.Instance.getClosestNode(transform.position),
+                Pathfinding.Instance.getClosestNode(_target.position)
+            );
+
+            if (_path.Count == 0)
+            {
+                return;
+            }
+        }
+
+        // Mueve hacia el primer nodo de la ruta calculada
+        MoveTowards(_path[0].transform.position);
+
+        // Si alcanza el nodo actual, remueve el nodo de la ruta
+        if (Vector3.Distance(transform.position, _path[0].transform.position) < 0.5f)
+        {
+            _path.RemoveAt(0);
         }
     }
 
