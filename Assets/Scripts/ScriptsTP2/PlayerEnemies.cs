@@ -20,6 +20,7 @@ public class PlayerEnemies : MonoBehaviour
     [SerializeField] private float viewAngle = 90f; 
     [SerializeField] private List<Transform> _waypoints;
 
+
     private Vector3 _desiredDir;
 
     // Máquina de estados

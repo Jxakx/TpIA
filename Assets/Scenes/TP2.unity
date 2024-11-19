@@ -2315,7 +2315,7 @@ MonoBehaviour:
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
   _speed: 3
-  rotationSpeed: 3
+  rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
   viewRange: 4.7
@@ -2490,7 +2490,7 @@ MonoBehaviour:
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
   _speed: 3
-  rotationSpeed: 3
+  rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
   viewRange: 4.7
@@ -3436,7 +3436,7 @@ MonoBehaviour:
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
   _speed: 3
-  rotationSpeed: 3
+  rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
   viewRange: 4.7
@@ -4809,7 +4809,7 @@ MonoBehaviour:
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
   _speed: 3
-  rotationSpeed: 3
+  rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
   viewRange: 4.71
