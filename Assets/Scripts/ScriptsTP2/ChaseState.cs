@@ -11,8 +11,12 @@ public class ChaseState : State
 
     public override void UpdateState(PlayerEnemies enemy)
     {
+        GameManager.Instance.alert = true;
+
         if (!enemy.IsPlayerInSight())
         {
+            GameManager.Instance.alert = false;
+
             if (enemy.lastVisitedNode != null) // Si hay un nodo visitado
             {
                 enemy.StateMachine.ChangeState(new PatrolState(enemy.lastVisitedNode), enemy);
@@ -26,6 +30,8 @@ public class ChaseState : State
 
         // Perseguir al jugador
         enemy.MoveTowards(enemy.Player.position);
+
+        
     }
 
     public override void ExitState(PlayerEnemies enemy)

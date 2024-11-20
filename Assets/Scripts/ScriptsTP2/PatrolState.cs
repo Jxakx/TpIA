@@ -33,12 +33,7 @@ public class PatrolState : State
     
 
 
-    public override void UpdateState(PlayerEnemies enemys)
-    {
-        
-    }
-
-    public void MoveWaypoints(PlayerEnemies enemy)
+    public override void UpdateState(PlayerEnemies enemy)
     {
         if (enemy.Waypoints.Count == 0) return;
 
