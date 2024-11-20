@@ -19,10 +19,10 @@ public class ChaseState : State
             GameManager.Instance.alert = false;
             GameManager.Instance.alertGameObject = "";
 
-            // Calcula el camino hacia la última posición conocida del jugador
+            // Si el jugador ya no está visible, utiliza A* para dirigirse al último nodo conocido
             if (enemy.lastVisitedNode != null)
             {
-                enemy.PathFindingState();  // Aquí invocamos el cálculo del camino usando A*
+                enemy.PathFindingState(); // Calcula el camino con A* hacia la última posición conocida del jugador
                 enemy.StateMachine.ChangeState(new PatrolAStar(), enemy);
             }
             else
@@ -35,6 +35,7 @@ public class ChaseState : State
         // Perseguir al jugador directamente si está en la línea de visión
         enemy.MoveTowards(enemy.Player.position);
     }
+
 
     public override void ExitState(PlayerEnemies enemy)
     {

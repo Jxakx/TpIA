@@ -319,7 +319,7 @@ MonoBehaviour:
   - {fileID: 201965561}
   - {fileID: 1801113481}
   - {fileID: 767483751}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1 &21809933
 GameObject:
@@ -751,7 +751,7 @@ MonoBehaviour:
   - {fileID: 1772663225}
   - {fileID: 955932107}
   - {fileID: 120603887}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1001 &84720772
 PrefabInstance:
@@ -948,7 +948,7 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 71750398}
   - {fileID: 1020280536}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1 &177837942
 GameObject:
@@ -1072,7 +1072,7 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 962413996}
   - {fileID: 1787623254}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1 &201965556
 GameObject:
@@ -1196,7 +1196,7 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 1787623254}
   - {fileID: 19184457}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1 &356682938 stripped
 GameObject:
@@ -1640,7 +1640,7 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 1801113481}
   - {fileID: 767483751}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1 &655978455
 GameObject:
@@ -1964,7 +1964,7 @@ MonoBehaviour:
   - {fileID: 1020280536}
   - {fileID: 1546160613}
   - {fileID: 1998502288}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1 &767483746
 GameObject:
@@ -2088,7 +2088,7 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 537240757}
   - {fileID: 19184457}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1 &780972975
 GameObject:
@@ -2363,7 +2363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e8acef45b12054aac93ea758955784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _obstacleDist: 2
+  _obstacleDist: 5
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 256
@@ -2542,7 +2542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e8acef45b12054aac93ea758955784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _obstacleDist: 2
+  _obstacleDist: 5
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 256
@@ -2684,7 +2684,7 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 71750398}
   - {fileID: 1314295780}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1 &962413991
 GameObject:
@@ -2809,7 +2809,7 @@ MonoBehaviour:
   - {fileID: 1546160613}
   - {fileID: 1998502288}
   - {fileID: 177837947}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
@@ -3130,7 +3130,7 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 120603887}
   - {fileID: 752317741}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1 &1040194169
 GameObject:
@@ -3254,7 +3254,7 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 1505399200}
   - {fileID: 1772663225}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1 &1111101412
 GameObject:
@@ -3496,7 +3496,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e8acef45b12054aac93ea758955784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _obstacleDist: 2
+  _obstacleDist: 5
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 256
@@ -3638,7 +3638,7 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 955932107}
   - {fileID: 1505399200}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1 &1328609066
 GameObject:
@@ -3972,7 +3972,7 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 1040194174}
   - {fileID: 1314295780}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1 &1505503190
 GameObject:
@@ -4202,7 +4202,7 @@ MonoBehaviour:
   - {fileID: 752317741}
   - {fileID: 962413996}
   - {fileID: 1787623254}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1 &1716359659
 GameObject:
@@ -4431,7 +4431,7 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 71750398}
   - {fileID: 1040194174}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1 &1777756673
 GameObject:
@@ -4661,7 +4661,7 @@ MonoBehaviour:
   - {fileID: 1546160613}
   - {fileID: 177837947}
   - {fileID: 201965561}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1 &1801113476
 GameObject:
@@ -4785,7 +4785,7 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 19184457}
   - {fileID: 537240757}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1001 &1831808317
 PrefabInstance:
@@ -4877,7 +4877,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e8acef45b12054aac93ea758955784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _obstacleDist: 2
+  _obstacleDist: 5
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 256
@@ -5019,7 +5019,7 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 752317741}
   - {fileID: 962413996}
-  detectionRadius: 0
+  detectionRadius: 4
   previousNode: {fileID: 0}
 --- !u!1 &2020588223
 GameObject:
