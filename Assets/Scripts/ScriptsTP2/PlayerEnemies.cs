@@ -3,77 +3,64 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class PlayerEnemies : MonoBehaviour
 {
+    // Variables principales
     [SerializeField] private float _obstacleDist;
     [SerializeField] private LayerMask _obstacleMask;
     private Vector3 _avoidanceDir;
 
-    [SerializeField] private Transform _target; // Target (Transform)
+    [SerializeField] private Transform _target; 
+    [SerializeField] private float _speed; 
+    [SerializeField] private float rotationSpeed; // Velocidad de rotación
+    [SerializeField, Range(0f, 1f)] private float seekWeight = 0.5f;
+    [SerializeField, Range(0f, 1f)] private float obstacleWeight = 0.743f;
+
+    [SerializeField] private float viewRange = 10f; 
+    [SerializeField] private float viewAngle = 90f; 
+    [SerializeField] private List<Transform> _waypoints;
+
     private Vector3 _desiredDir;
 
-    [SerializeField] private float rotationSpeed;
-    [SerializeField] private float speed;
+    public StateMachine StateMachine { get; private set; } = new StateMachine();
 
-    [SerializeField, Range(0f, 1f)] private float seekWeight; // "0.5"
-    [SerializeField, Range(0f, 1f)] private float obstacleWeight; // "0.743"
+    public Transform Player => _target; 
+    public float Speed => _speed; 
+    public List<Transform> Waypoints => _waypoints; 
 
-    private Action followingAction = delegate { };
-
-    private List<Node> _path = new List<Node>();
-
-    [SerializeField] private float viewRange;
-    [SerializeField] private float viewAngle;
-    private void Update()
+    private void Start()
     {
-        followingAction();
-        
-        if(Input.GetKey(KeyCode.Q))
-        {
-            followingAction = ObstacleAvoidanceState;
-        }
-        else if (Input.GetKey(KeyCode.E))
-        {
-            followingAction = PathFindingState;
-        }
+        StateMachine.ChangeState(new PatrolState(), this);
     }
 
-    private void PathFindingState()
+    private void Update()
     {
-        if (Vector3.Distance(transform.position, _target.position) < .5f)
-        {
-            return;
-        }
+        StateMachine.Update(this);
+    }
 
-        if(_path.Count <= 0)
-        {
-            _path = Pathfinding.Instance.GetPath(Pathfinding.Instance.getClosestNode(transform.position), Pathfinding.Instance.getClosestNode(_target.position));
+    public bool IsPlayerInSight()
+    {
+        Vector3 dirToPlayer = (_target.position - transform.position).normalized;
 
-            if (_path.Count == 0)
+        if (Vector3.Angle(transform.forward, dirToPlayer) < viewAngle / 2)
+        {
+            float distanceToPlayer = Vector3.Distance(transform.position, _target.position);
+
+            if (distanceToPlayer <= viewRange &&
+                !Physics.Raycast(transform.position, dirToPlayer, distanceToPlayer, _obstacleMask))
             {
-                return;
+                return true;
             }
         }
 
-        
-
-        var dir = _path[0].transform.position - transform.position;
-        transform.position += dir.normalized * speed * Time.deltaTime;
-
-        if (dir.magnitude < .5f)
-        {
-            _path.RemoveAt(0);
-        }
+        return false;
     }
+ 
 
-    #region Obstacle Region
-
+    // Evasión de obstáculos
     public void ObstacleAvoidanceState()
     {
         _desiredDir = Seek().normalized * seekWeight + ObstacleAvoidance().normalized * obstacleWeight;
-        transform.forward = Vector3.Lerp(transform.forward, _desiredDir, rotationSpeed * Time.deltaTime);
-        transform.position += transform.forward * speed * Time.deltaTime;
     }
 
     public Vector3 Seek()
@@ -101,52 +88,27 @@ public class PlayerEnemies : MonoBehaviour
         return _avoidanceDir;
     }
 
-
-    #endregion
-
-    #region OnSight
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, _obstacleDist);
-
-        if (Pathfinding.OnSight(transform.position, _target.position, LayerMask.GetMask("Obstacle")))
-        {
-            Gizmos.color = Color.green;
-        }
-        else
-        {
-            Gizmos.color = Color.red;
-        }
-
-        //Gizmos.DrawLine(transform.position, _target.position);
-
         Gizmos.color = Color.white;
+
+        // Dibuja el rango de visión
         Gizmos.DrawWireSphere(transform.position, viewRange);
 
-        var dirA = DirFromAngle(viewAngle / 2 + transform.eulerAngles.y);
-        var dirB = DirFromAngle(-viewAngle / 2 + transform.eulerAngles.y);
+        // Dibuja las líneas del ángulo de visión
+        Vector3 dirA = DirFromAngle(viewAngle / 2 + transform.eulerAngles.y);
+        Vector3 dirB = DirFromAngle(-viewAngle / 2 + transform.eulerAngles.y);
 
         Gizmos.DrawLine(transform.position, transform.position + dirA * viewRange);
         Gizmos.DrawLine(transform.position, transform.position + dirB * viewRange);
 
-        if(Pathfinding.FieldOfView(transform.position, transform.forward, _target.position, viewAngle, LayerMask.GetMask("Obstacle"))
-            && Vector3.Distance(transform.position, _target.position) < viewRange)
-        {
-            Gizmos.color = Color.blue;
-        }
-        else
-        {
-            Gizmos.color = Color.yellow;
-        }
-
-        Gizmos.DrawLine(transform.position, _target.position);
+        // Cambia de color si el jugador está en el rango de visión
+        Gizmos.color = IsPlayerInSight() ? Color.green : Color.red;
+        Gizmos.DrawWireSphere(transform.position, viewRange);
     }
 
     private Vector3 DirFromAngle(float angle)
     {
-        return new Vector3(Mathf.Sin(angle * Mathf.Deg2Rad), 0, MathF.Cos(angle * Mathf.Deg2Rad));
+        return new Vector3(Mathf.Sin(angle * Mathf.Deg2Rad), 0, Mathf.Cos(angle * Mathf.Deg2Rad));
     }
-    #endregion
-
-
 }
