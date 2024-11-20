@@ -8,7 +8,7 @@ public class PatrolState : State
     private Node startNode;
 
 
-    public override void EnterState(PlayerEnemies enemy)
+    public override void EnterState(PlayerEnemies enemy)//enemy es el script playerEnemies
     {
         Debug.Log("Iniciando Patrullaje");
 
@@ -33,7 +33,12 @@ public class PatrolState : State
     
 
 
-    public override void UpdateState(PlayerEnemies enemy)
+    public override void UpdateState(PlayerEnemies enemys)
+    {
+        
+    }
+
+    public void MoveWaypoints(PlayerEnemies enemy)
     {
         if (enemy.Waypoints.Count == 0) return;
 

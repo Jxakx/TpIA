@@ -71,7 +71,7 @@ public class Pathfinding : MonoBehaviour
         finalPath.Reverse();
         return finalPath;
     }
-
+    //nodo mas cercano a la calavera
     public Node getClosestNode(Vector3 position)
     {
         var closestNode = nodes[0];
