@@ -13,13 +13,17 @@ public class ChaseState : State
     {
         GameManager.Instance.alert = true;
         GameManager.Instance.alertGameObject = enemy.gameObject.name;
+
         if (!enemy.IsPlayerInSight())
         {
             GameManager.Instance.alert = false;
             GameManager.Instance.alertGameObject = "";
-            if (enemy.lastVisitedNode != null) // Si hay un nodo visitado
+
+            // Calcula el camino hacia la última posición conocida del jugador
+            if (enemy.lastVisitedNode != null)
             {
-                enemy.StateMachine.ChangeState(new PatrolState(enemy.lastVisitedNode), enemy);
+                enemy.PathFindingState();  // Aquí invocamos el cálculo del camino usando A*
+                enemy.StateMachine.ChangeState(new PatrolAStar(), enemy);
             }
             else
             {
@@ -28,10 +32,8 @@ public class ChaseState : State
             return;
         }
 
-        // Perseguir al jugador
+        // Perseguir al jugador directamente si está en la línea de visión
         enemy.MoveTowards(enemy.Player.position);
-
-        
     }
 
     public override void ExitState(PlayerEnemies enemy)

@@ -67,27 +67,27 @@ public class PatrolAStar : State
 
     public void retornoAstar(PlayerEnemies enemy)
     {
-        if (path.Count == 0) return;
-        _currentWaypointIndex = 0;
-        path.Reverse();
-        
-        // Moverse hacia el waypoint actual con rotación
+        if (path.Count == 0)
+        {
+            // Calcula el camino de regreso hacia el primer waypoint del patrullaje
+            enemy.PathFindingState();  // Calcula la ruta con A*
+            _currentWaypointIndex = 0;
+        }
+
         Transform waypoint = path[_currentWaypointIndex].transform;
         enemy.MoveTowards(waypoint.position);
 
-        // Si alcanza el waypoint actual, actualiza el último nodo visitado
         if (Vector3.Distance(enemy.transform.position, waypoint.position) < 0.5f)
         {
-            if (path[_currentWaypointIndex] == startNode)
+            if (_currentWaypointIndex == path.Count - 1)
             {
-                //estrella en reversa
-                enemy.StateMachine.ChangeState(new PatrolAStar(), enemy);
+                // Volver al estado de patrullaje normal
+                enemy.StateMachine.ChangeState(new PatrolState(), enemy);
+                return;
             }
-            // Actualiza el último nodo visitado
-            enemy.lastVisitedNode = Pathfinding.Instance.getClosestNode(waypoint.position);
 
-            // Cambia al siguiente waypoint
-            _currentWaypointIndex = (_currentWaypointIndex + 1);
+            enemy.lastVisitedNode = Pathfinding.Instance.getClosestNode(waypoint.position);
+            _currentWaypointIndex++;
         }
     }
 }

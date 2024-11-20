@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -507,7 +507,7 @@ MonoBehaviour:
   nodes: []
   _obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
 --- !u!4 &36589405
 Transform:
   m_ObjectHideFlags: 0
@@ -2363,7 +2363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e8acef45b12054aac93ea758955784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _obstacleDist: 0
+  _obstacleDist: 2
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 256
@@ -2372,7 +2372,7 @@ MonoBehaviour:
   rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
-  viewRange: 4.7
+  viewRange: 6
   viewAngle: 90
   _waypoints:
   - {fileID: 71750394}
@@ -2542,7 +2542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e8acef45b12054aac93ea758955784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _obstacleDist: 0
+  _obstacleDist: 2
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 256
@@ -2551,7 +2551,7 @@ MonoBehaviour:
   rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
-  viewRange: 4.7
+  viewRange: 6
   viewAngle: 90
   _waypoints:
   - {fileID: 962413992}
@@ -3496,7 +3496,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e8acef45b12054aac93ea758955784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _obstacleDist: 0
+  _obstacleDist: 2
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 256
@@ -3505,7 +3505,7 @@ MonoBehaviour:
   rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
-  viewRange: 4.7
+  viewRange: 6
   viewAngle: 90
   _waypoints:
   - {fileID: 177837943}
@@ -4877,7 +4877,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09e8acef45b12054aac93ea758955784, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _obstacleDist: 0
+  _obstacleDist: 2
   _obstacleMask:
     serializedVersion: 2
     m_Bits: 256
@@ -4886,7 +4886,7 @@ MonoBehaviour:
   rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
-  viewRange: 4.71
+  viewRange: 6
   viewAngle: 90
   _waypoints:
   - {fileID: 767483747}
@@ -5261,7 +5261,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5269,7 +5269,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 27.3
+      value: 5.4
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalRotation.w

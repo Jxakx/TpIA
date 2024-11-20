@@ -96,15 +96,18 @@ public class PlayerEnemies : MonoBehaviour
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
-    private void PathFindingState()
+    public void PathFindingState()
     {
-        if (Vector3.Distance(transform.position, _target.position) < .5f)
+        // Paso 1: Verificar si estamos cerca del objetivo
+        if (Vector3.Distance(transform.position, _target.position) < 0.5f)
         {
-            return;
+            return; // Si ya estamos cerca del objetivo, no hacemos nada
         }
 
+        // Paso 2: Comprobar si necesitamos calcular un nuevo camino
         if (_path.Count <= 0)
         {
+            // Paso 3: Calcular el camino desde el nodo más cercano a la posición actual al nodo más cercano al objetivo
             _path = Pathfinding.Instance.GetPath(
                 Pathfinding.Instance.getClosestNode(transform.position),
                 Pathfinding.Instance.getClosestNode(_target.position)
@@ -112,25 +115,24 @@ public class PlayerEnemies : MonoBehaviour
 
             if (_path.Count == 0)
             {
-                return;
+                return; // Si no se encontró un camino, salir
             }
         }
 
-        // Mueve hacia el primer nodo de la ruta calculada
-        MoveTowards(_path[0].transform.position);
-
-        // Si alcanza el nodo actual, remueve el nodo de la ruta
-        if (Vector3.Distance(transform.position, _path[0].transform.position) < 0.5f)
+        // Paso 4: Moverse hacia el primer nodo de la ruta calculada
+        if (_path.Count > 0)
         {
-            _path.RemoveAt(0);
-        }
+            Transform nextNode = _path[0].transform;
 
-        if (_path.Count > 0 && Vector3.Distance(transform.position, _path[0].transform.position) < 0.5f)
-        {
-            lastVisitedNode = _path[0]; // Guarda el nodo alcanzado
-            _path.RemoveAt(0);
-        }
+            // Mueve hacia el nodo objetivo
+            MoveTowards(nextNode.position);
 
+            // Si alcanza el nodo actual, remuévelo de la lista
+            if (Vector3.Distance(transform.position, nextNode.position) < 0.5f)
+            {
+                _path.RemoveAt(0); // Eliminar el nodo alcanzado de la lista
+            }
+        }
     }
 
 
@@ -185,6 +187,9 @@ public class PlayerEnemies : MonoBehaviour
         // Cambia de color si el jugador está en el rango de visión
         Gizmos.color = IsPlayerInSight() ? Color.green : Color.red;
         Gizmos.DrawWireSphere(transform.position, viewRange);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, _obstacleDist);
     }
 
     private Vector3 DirFromAngle(float angle)
