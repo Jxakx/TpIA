@@ -431,7 +431,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 23881652}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -847,7 +847,7 @@ Transform:
   m_GameObject: {fileID: 120603882}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 13.264615, y: -5.602201, z: 2.5840197}
+  m_LocalPosition: {x: 13.264615, y: -5.602201, z: 3.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2314,7 +2314,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
-  _speed: 3
+  _speed: 4
   rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
@@ -2327,6 +2327,7 @@ MonoBehaviour:
   - {fileID: 1505399196}
   - {fileID: 1040194170}
   - {fileID: 1772663221}
+  lastVisitedNode: {fileID: 0}
 --- !u!1 &824623018
 GameObject:
   m_ObjectHideFlags: 0
@@ -2489,7 +2490,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
-  _speed: 3
+  _speed: 4
   rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
@@ -2500,6 +2501,7 @@ MonoBehaviour:
   - {fileID: 1546160609}
   - {fileID: 752317737}
   - {fileID: 1998502284}
+  lastVisitedNode: {fileID: 0}
 --- !u!1 &955932102
 GameObject:
   m_ObjectHideFlags: 0
@@ -2975,7 +2977,7 @@ Transform:
   m_GameObject: {fileID: 1020280531}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 23.544617, y: -5.602201, z: 2.5840197}
+  m_LocalPosition: {x: 23.544617, y: -5.602201, z: 3.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3435,7 +3437,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
-  _speed: 3
+  _speed: 4
   rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
@@ -3446,6 +3448,7 @@ MonoBehaviour:
   - {fileID: 1787623250}
   - {fileID: 1546160609}
   - {fileID: 962413992}
+  lastVisitedNode: {fileID: 0}
 --- !u!1 &1314295775
 GameObject:
   m_ObjectHideFlags: 0
@@ -4808,7 +4811,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
-  _speed: 3
+  _speed: 4
   rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
@@ -4819,6 +4822,7 @@ MonoBehaviour:
   - {fileID: 537240753}
   - {fileID: 1801113477}
   - {fileID: 19184453}
+  lastVisitedNode: {fileID: 0}
 --- !u!1 &1998502283
 GameObject:
   m_ObjectHideFlags: 0
@@ -5163,7 +5167,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6104233312204880471, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_Name
-      value: Target
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 6104233312204880471, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalScale.x
@@ -5179,7 +5187,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.3
+      value: 3.1
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5187,7 +5195,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 26.4
+      value: 27.3
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalRotation.w

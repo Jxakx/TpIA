@@ -5,29 +5,53 @@ using UnityEngine;
 public class PatrolState : State
 {
     private int _currentWaypointIndex = 0;
+    private Node startNode;
+
 
     public override void EnterState(PlayerEnemies enemy)
     {
-        // Inicia el patrullaje
         Debug.Log("Iniciando Patrullaje");
+
+        if (startNode != null) // Si hay un nodo inicial específico
+        {
+            // Encuentra el índice del nodo más cercano al último nodo visitado
+            for (int i = 0; i < enemy.Waypoints.Count; i++)
+            {
+                if (enemy.Waypoints[i].position == startNode.transform.position)
+                {
+                    _currentWaypointIndex = i;
+                    break;
+                }
+            }
+        }
     }
+    public PatrolState(Node startNode = null)
+    {
+        this.startNode = startNode;
+    }
+
+    
+
 
     public override void UpdateState(PlayerEnemies enemy)
     {
         if (enemy.Waypoints.Count == 0) return;
 
-        // Moverse hacia el siguiente waypoint
+        // Moverse hacia el waypoint actual con rotación
         Transform waypoint = enemy.Waypoints[_currentWaypointIndex];
-        Vector3 direction = waypoint.position - enemy.transform.position;
-        enemy.transform.position += direction.normalized * enemy.Speed * Time.deltaTime;
+        enemy.MoveTowards(waypoint.position);
 
-        // Si alcanza el waypoint, pasa al siguiente
-        if (direction.magnitude < 0.5f)
+        // Si alcanza el waypoint actual, actualiza el último nodo visitado
+        if (Vector3.Distance(enemy.transform.position, waypoint.position) < 0.5f)
         {
+            // Actualiza el último nodo visitado
+            enemy.lastVisitedNode = Pathfinding.Instance.getClosestNode(waypoint.position);
+
+            // Cambia al siguiente waypoint
             _currentWaypointIndex = (_currentWaypointIndex + 1) % enemy.Waypoints.Count;
         }
 
-        // Cambiar de estado si detecta al jugador
+        // Cambiar al estado de persecución si detecta al jugador
         if (enemy.IsPlayerInSight())
         {
             enemy.StateMachine.ChangeState(new ChaseState(), enemy);
@@ -39,4 +63,3 @@ public class PatrolState : State
         Debug.Log("Saliendo de Patrullaje");
     }
 }
-

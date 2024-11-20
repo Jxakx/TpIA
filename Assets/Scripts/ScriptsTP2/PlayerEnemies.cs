@@ -10,26 +10,30 @@ public class PlayerEnemies : MonoBehaviour
     [SerializeField] private LayerMask _obstacleMask;
     private Vector3 _avoidanceDir;
 
-    [SerializeField] private Transform _target; 
-    [SerializeField] private float _speed; 
+    [SerializeField] private Transform _target;
+    [SerializeField] private float _speed;
     [SerializeField] private float rotationSpeed; // Velocidad de rotación
     [SerializeField, Range(0f, 1f)] private float seekWeight = 0.5f;
     [SerializeField, Range(0f, 1f)] private float obstacleWeight = 0.743f;
 
-    [SerializeField] private float viewRange = 10f; 
-    [SerializeField] private float viewAngle = 90f; 
+    [SerializeField] private float viewRange = 10f;
+    [SerializeField] private float viewAngle = 90f;
     [SerializeField] private List<Transform> _waypoints;
 
     private Vector3 _desiredDir;
+    public List<Node> _path = new List<Node>();
 
     public StateMachine StateMachine { get; private set; } = new StateMachine();
 
-    public Transform Player => _target; 
-    public float Speed => _speed; 
-    public List<Transform> Waypoints => _waypoints; 
+    public Transform Player => _target;
+    public float Speed => _speed;
+    public List<Transform> Waypoints => _waypoints;
+
+    public Node lastVisitedNode; // Nodo visitado más recientemente
 
     private void Start()
     {
+        lastVisitedNode = Pathfinding.Instance.getClosestNode(transform.position);
         StateMachine.ChangeState(new PatrolState(), this);
     }
 
@@ -38,6 +42,9 @@ public class PlayerEnemies : MonoBehaviour
         StateMachine.Update(this);
     }
 
+    /// <summary>
+    /// Comprueba si el jugador está en el campo de visión.
+    /// </summary>
     public bool IsPlayerInSight()
     {
         Vector3 dirToPlayer = (_target.position - transform.position).normalized;
@@ -55,12 +62,81 @@ public class PlayerEnemies : MonoBehaviour
 
         return false;
     }
- 
 
-    // Evasión de obstáculos
+    /// <summary>
+    /// Movimiento hacia un objetivo con rotación.
+    /// </summary>
+    public void MoveTowards(Vector3 targetPosition)
+    {
+        // Calcula la dirección hacia el objetivo
+        Vector3 direction = targetPosition - transform.position;
+
+        if (direction.magnitude > 0.01f) // Evita cálculos innecesarios
+        {
+            // Rota hacia la dirección del objetivo
+            RotateTowards(direction);
+
+            // Mueve hacia el objetivo
+            transform.position += direction.normalized * Speed * Time.deltaTime;
+        }
+    }
+
+    /// <summary>
+    /// Rota suavemente hacia una dirección.
+    /// </summary>
+    private void RotateTowards(Vector3 direction)
+    {
+        if (direction.magnitude > 0.01f) // Solo rota si hay una dirección significativa
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
+    }
+    private void PathFindingState()
+    {
+        if (Vector3.Distance(transform.position, _target.position) < .5f)
+        {
+            return;
+        }
+
+        if (_path.Count <= 0)
+        {
+            _path = Pathfinding.Instance.GetPath(
+                Pathfinding.Instance.getClosestNode(transform.position),
+                Pathfinding.Instance.getClosestNode(_target.position)
+            );
+
+            if (_path.Count == 0)
+            {
+                return;
+            }
+        }
+
+        // Mueve hacia el primer nodo de la ruta calculada
+        MoveTowards(_path[0].transform.position);
+
+        // Si alcanza el nodo actual, remueve el nodo de la ruta
+        if (Vector3.Distance(transform.position, _path[0].transform.position) < 0.5f)
+        {
+            _path.RemoveAt(0);
+        }
+
+        if (_path.Count > 0 && Vector3.Distance(transform.position, _path[0].transform.position) < 0.5f)
+        {
+            lastVisitedNode = _path[0]; // Guarda el nodo alcanzado
+            _path.RemoveAt(0);
+        }
+
+    }
+
+
+    /// <summary>
+    /// Evasión de obstáculos.
+    /// </summary>
     public void ObstacleAvoidanceState()
     {
         _desiredDir = Seek().normalized * seekWeight + ObstacleAvoidance().normalized * obstacleWeight;
+        MoveTowards(transform.position + _desiredDir);
     }
 
     public Vector3 Seek()

@@ -13,12 +13,19 @@ public class ChaseState : State
     {
         if (!enemy.IsPlayerInSight())
         {
-            enemy.StateMachine.ChangeState(new PatrolState(), enemy);
+            if (enemy.lastVisitedNode != null) // Si hay un nodo visitado
+            {
+                enemy.StateMachine.ChangeState(new PatrolState(enemy.lastVisitedNode), enemy);
+            }
+            else
+            {
+                enemy.StateMachine.ChangeState(new PatrolState(), enemy); // Patrullaje normal si no hay nodo guardado
+            }
             return;
         }
 
-        Vector3 direction = enemy.Player.position - enemy.transform.position;
-        enemy.transform.position += direction.normalized * enemy.Speed * Time.deltaTime;
+        // Perseguir al jugador
+        enemy.MoveTowards(enemy.Player.position);
     }
 
     public override void ExitState(PlayerEnemies enemy)
@@ -26,4 +33,3 @@ public class ChaseState : State
         Debug.Log("Saliendo de Persecución");
     }
 }
-
