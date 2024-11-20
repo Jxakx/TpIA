@@ -431,7 +431,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 23881652}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5167,7 +5167,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6104233312204880471, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_Name
-      value: Target
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 6104233312204880471, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalScale.x

@@ -12,17 +12,14 @@ public class PatrolState : State
     {
         Debug.Log("Iniciando Patrullaje");
 
-        if (startNode != null) // Si hay un nodo inicial específico
+        // Calcula la ruta hacia el nodo más cercano al waypoint de patrullaje
+        if (enemy.lastVisitedNode != null)
         {
-            // Encuentra el índice del nodo más cercano al último nodo visitado
-            for (int i = 0; i < enemy.Waypoints.Count; i++)
-            {
-                if (enemy.Waypoints[i].position == startNode.transform.position)
-                {
-                    _currentWaypointIndex = i;
-                    break;
-                }
-            }
+            _currentWaypointIndex = 0;  // Suponiendo que el patrullaje siempre comienza en el primer waypoint
+            enemy._path = Pathfinding.Instance.GetPath(
+            enemy.lastVisitedNode,
+            Pathfinding.Instance.getClosestNode(enemy.Waypoints[_currentWaypointIndex].position)
+            );
         }
     }
     public PatrolState(Node startNode = null)
@@ -30,33 +27,33 @@ public class PatrolState : State
         this.startNode = startNode;
     }
 
-    
+
 
 
     public override void UpdateState(PlayerEnemies enemy)
     {
-        if (enemy.Waypoints.Count == 0) return;
-
-        // Moverse hacia el waypoint actual con rotación
-        Transform waypoint = enemy.Waypoints[_currentWaypointIndex];
-        enemy.MoveTowards(waypoint.position);
-
-        // Si alcanza el waypoint actual, actualiza el último nodo visitado
-        if (Vector3.Distance(enemy.transform.position, waypoint.position) < 0.5f)
+        if (enemy._path.Count > 0)
         {
-            // Actualiza el último nodo visitado
-            enemy.lastVisitedNode = Pathfinding.Instance.getClosestNode(waypoint.position);
+            enemy.MoveTowards(enemy._path[0].transform.position);
 
-            // Cambia al siguiente waypoint
-            _currentWaypointIndex = (_currentWaypointIndex + 1) % enemy.Waypoints.Count;
+            // Cuando llegue al nodo actual, quítalo de la lista y actualiza `lastVisitedNode`
+            if (Vector3.Distance(enemy.transform.position, enemy._path[0].transform.position) < 0.5f)
+            {
+                enemy.lastVisitedNode = enemy._path[0];
+                enemy._path.RemoveAt(0);
+            }
         }
-
-        // Cambiar al estado de persecución si detecta al jugador
-        if (enemy.IsPlayerInSight())
+        else
         {
-            enemy.StateMachine.ChangeState(new ChaseState(), enemy);
+            // Cuando llegue al final del camino, cambia al siguiente waypoint
+            _currentWaypointIndex = (_currentWaypointIndex + 1) % enemy.Waypoints.Count;
+            enemy._path = Pathfinding.Instance.GetPath(
+            enemy.lastVisitedNode,
+            Pathfinding.Instance.getClosestNode(enemy.Waypoints[_currentWaypointIndex].position)
+            );
         }
     }
+
 
     public override void ExitState(PlayerEnemies enemy)
     {

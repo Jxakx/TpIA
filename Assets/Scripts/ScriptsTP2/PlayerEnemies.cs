@@ -21,7 +21,7 @@ public class PlayerEnemies : MonoBehaviour
     [SerializeField] private List<Transform> _waypoints;
 
     private Vector3 _desiredDir;
-    private List<Node> _path = new List<Node>();
+    public List<Node> _path = new List<Node>();
 
     public StateMachine StateMachine { get; private set; } = new StateMachine();
 
