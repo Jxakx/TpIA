@@ -6,17 +6,17 @@ public class ChaseState : State
 {
     public override void EnterState(PlayerEnemies enemy)
     {
-        Debug.Log("Iniciando Persecución");
+        Debug.Log("Iniciando Persecución " + enemy.gameObject.name);
     }
 
     public override void UpdateState(PlayerEnemies enemy)
     {
         GameManager.Instance.alert = true;
-
+        GameManager.Instance.alertGameObject = enemy.gameObject.name;
         if (!enemy.IsPlayerInSight())
         {
             GameManager.Instance.alert = false;
-
+            GameManager.Instance.alertGameObject = "";
             if (enemy.lastVisitedNode != null) // Si hay un nodo visitado
             {
                 enemy.StateMachine.ChangeState(new PatrolState(enemy.lastVisitedNode), enemy);

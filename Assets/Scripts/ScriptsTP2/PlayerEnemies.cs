@@ -31,6 +31,10 @@ public class PlayerEnemies : MonoBehaviour
 
     public Node lastVisitedNode; // Nodo visitado más recientemente
 
+    public Pathfinding pathFinding;
+
+    public Transform player;
+
     private void Start()
     {
         lastVisitedNode = Pathfinding.Instance.getClosestNode(transform.position);

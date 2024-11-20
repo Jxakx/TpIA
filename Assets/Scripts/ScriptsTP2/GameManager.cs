@@ -6,11 +6,11 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public bool alert;
-    public PlayerEnemies alertGameObject;
+    public string alertGameObject = "";
 
     private void Start()
     {
-        if(Instance = null)
+        if(Instance == null)
         {
             Instance = this;
         }

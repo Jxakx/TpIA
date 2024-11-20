@@ -10,7 +10,7 @@ public class PatrolState : State
 
     public override void EnterState(PlayerEnemies enemy)//enemy es el script playerEnemies
     {
-        Debug.Log("Iniciando Patrullaje");
+        Debug.Log("Iniciando Patrullaje" + enemy.gameObject.name);
 
         if (startNode != null) // Si hay un nodo inicial específico
         {
@@ -56,10 +56,15 @@ public class PatrolState : State
         {
             enemy.StateMachine.ChangeState(new ChaseState(), enemy);
         }
+
+        if(enemy.gameObject.name != GameManager.Instance.alertGameObject && GameManager.Instance.alertGameObject != "")
+        {
+            enemy.StateMachine.ChangeState(new PatrolAStar(), enemy);
+        }
     }
 
     public override void ExitState(PlayerEnemies enemy)
     {
-        Debug.Log("Saliendo de Patrullaje");
+        Debug.Log("Saliendo de Patrullaje" + enemy.gameObject.name);
     }
 }
