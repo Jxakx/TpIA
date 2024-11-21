@@ -68,6 +68,7 @@ public class PatrolAStar : State
             if(isBack == true && _currentWaypointIndex == path.Count - 1)
             {
                 Debug.Log("Volviendo a Patrol");
+                GameManager.Instance.skullsInTravel.Remove(enemy.gameObject);
                 enemy.StateMachine.ChangeState(new PatrolAStar(), enemy);
             }
         }

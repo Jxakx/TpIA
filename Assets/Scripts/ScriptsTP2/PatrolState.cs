@@ -50,12 +50,20 @@ public class PatrolState : State
         // Cambiar al estado de persecución si detecta al jugador
         if (enemy.IsPlayerInSight())
         {
+            foreach (var item in GameManager.Instance.allSkulls)
+            {
+                if(item != enemy.gameObject)
+                {
+                    GameManager.Instance.skullsInTravel.Add(item);
+                }
+            }
+
             enemy.StateMachine.ChangeState(new ChaseState(), enemy);
         }
         // Indica a las calaveras que tienen que hacer A* al punto donde me detectaron
-        if (enemy.gameObject.name != GameManager.Instance.alertGameObject && GameManager.Instance.alertGameObject != "") 
+        if (enemy.gameObject.name != GameManager.Instance.alertGameObject && GameManager.Instance.alertGameObject != "" && GameManager.Instance.skullsInTravel.Contains(enemy.gameObject) == true )
         {
-            GameManager.Instance.skullsInTravel.Add(enemy.gameObject);
+            Debug.Log("XXXXXX Entró a estrella XXXXXX");
             enemy.StateMachine.ChangeState(new PatrolAStar(), enemy);
         }
     }
