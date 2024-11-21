@@ -7,7 +7,6 @@ public class PatrolState : State
     private int _currentWaypointIndex = 0;
     private Node startNode;
 
-
     public override void EnterState(PlayerEnemies enemy)//enemy es el script playerEnemies
     {
         //Debug.Log("Iniciando Patrullaje" + enemy.gameObject.name);
@@ -29,9 +28,6 @@ public class PatrolState : State
     {
         this.startNode = startNode;
     }
-
-    
-
 
     public override void UpdateState(PlayerEnemies enemy)
     {
