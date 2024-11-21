@@ -2357,6 +2357,8 @@ MonoBehaviour:
   allSkulls:
   - {fileID: 807072401}
   - {fileID: 912258951}
+  - {fileID: 356682938}
+  - {fileID: 1831808319}
   skullsInTravel: []
 --- !u!1 &807072401 stripped
 GameObject:
@@ -3481,7 +3483,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1abf712ed462ec6478e484c5320ee04f, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2608501106575013145, guid: 1abf712ed462ec6478e484c5320ee04f, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -4863,7 +4865,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1e92e2996370b3a4dbbc469062824435, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2608501106575013145, guid: 1e92e2996370b3a4dbbc469062824435, type: 3}
       propertyPath: m_Materials.Array.data[0]

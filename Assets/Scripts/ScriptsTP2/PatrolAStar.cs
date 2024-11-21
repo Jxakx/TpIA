@@ -69,7 +69,7 @@ public class PatrolAStar : State
             {
                 Debug.Log("Volviendo a Patrol");
                 GameManager.Instance.skullsInTravel.Remove(enemy.gameObject);
-                enemy.StateMachine.ChangeState(new PatrolAStar(), enemy);
+                enemy.StateMachine.ChangeState(new PatrolState(), enemy);
             }
         }
     }
