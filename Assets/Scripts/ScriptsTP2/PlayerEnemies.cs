@@ -22,16 +22,16 @@ public class PlayerEnemies : MonoBehaviour
 
     private Vector3 _desiredDir;
     public List<Node> _path = new List<Node>();
-
     public StateMachine StateMachine { get; private set; } = new StateMachine();
-
     public Transform Player => _target;
     public float Speed => _speed;
     public List<Transform> Waypoints => _waypoints;
 
     public Node lastVisitedNode; // Nodo visitado más recientemente
 
-    public Pathfinding pathFinding;
+
+    public PathFinding2 pathFinding = new PathFinding2();
+    public Pathfinding funcionesPaths;
 
     public Transform player;
 
@@ -96,44 +96,44 @@ public class PlayerEnemies : MonoBehaviour
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
-    public void PathFindingState()
-    {
-        // Paso 1: Verificar si estamos cerca del objetivo
-        if (Vector3.Distance(transform.position, _target.position) < 0.5f)
-        {
-            return; // Si ya estamos cerca del objetivo, no hacemos nada
-        }
+    //public void PathFindingState()
+    //{
+    //    // Paso 1: Verificar si estamos cerca del objetivo
+    //    if (Vector3.Distance(transform.position, _target.position) < 0.5f)
+    //    {
+    //        return; // Si ya estamos cerca del objetivo, no hacemos nada
+    //    }
 
-        // Paso 2: Comprobar si necesitamos calcular un nuevo camino
-        if (_path.Count <= 0)
-        {
-            // Paso 3: Calcular el camino desde el nodo más cercano a la posición actual al nodo más cercano al objetivo
-            _path = Pathfinding.Instance.GetPath(
-                Pathfinding.Instance.getClosestNode(transform.position),
-                Pathfinding.Instance.getClosestNode(_target.position)
-            );
+    //    // Paso 2: Comprobar si necesitamos calcular un nuevo camino
+    //    if (_path.Count <= 0)
+    //    {
+    //        // Paso 3: Calcular el camino desde el nodo más cercano a la posición actual al nodo más cercano al objetivo
+    //        _path = Pathfinding.Instance.GetPath(
+    //            Pathfinding.Instance.getClosestNode(transform.position),
+    //            Pathfinding.Instance.getClosestNode(_target.position)
+    //        );
 
-            if (_path.Count == 0)
-            {
-                return; // Si no se encontró un camino, salir
-            }
-        }
+    //        if (_path.Count == 0)
+    //        {
+    //            return; // Si no se encontró un camino, salir
+    //        }
+    //    }
 
-        // Paso 4: Moverse hacia el primer nodo de la ruta calculada
-        if (_path.Count > 0)
-        {
-            Transform nextNode = _path[0].transform;
+    //    // Paso 4: Moverse hacia el primer nodo de la ruta calculada
+    //    if (_path.Count > 0)
+    //    {
+    //        Transform nextNode = _path[0].transform;
 
-            // Mueve hacia el nodo objetivo
-            MoveTowards(nextNode.position);
+    //        // Mueve hacia el nodo objetivo
+    //        MoveTowards(nextNode.position);
 
-            // Si alcanza el nodo actual, remuévelo de la lista
-            if (Vector3.Distance(transform.position, nextNode.position) < 0.5f)
-            {
-                _path.RemoveAt(0); // Eliminar el nodo alcanzado de la lista
-            }
-        }
-    }
+    //        // Si alcanza el nodo actual, remuévelo de la lista
+    //        if (Vector3.Distance(transform.position, nextNode.position) < 0.5f)
+    //        {
+    //            _path.RemoveAt(0); // Eliminar el nodo alcanzado de la lista
+    //        }
+    //    }
+    //}
 
 
     /// <summary>

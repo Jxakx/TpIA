@@ -9,17 +9,17 @@ public class PatrolAStar : State
     private List<Node> path = new List<Node>();
     public int _currentWaypointIndex = 0;
     private bool inStar = true;
+
+    public bool oneTime = true;
+    public bool isBack = false;
+
     public override void EnterState(PlayerEnemies enemy)
     {
-        Debug.Log("Entre a clase Star");
-        startNode = enemy.pathFinding.getClosestNode(enemy.transform.position);
-        finalNode = enemy.pathFinding.getClosestNode(enemy.player.position);
-        path = enemy.pathFinding.GetPath(startNode, finalNode);
-        Debug.Log("Path creado");
-        foreach(var item in path)
-        {
-            Debug.Log(item);
-        }
+        startNode = enemy.funcionesPaths.getClosestNode(enemy.transform.position);
+        finalNode = enemy.funcionesPaths.getClosestNode(enemy.player.position);
+        path = enemy.pathFinding.AStar(startNode, finalNode);
+        path.Reverse();
+        Debug.Log("XXXXXXXXXXX" + enemy.gameObject.name + " Desde" + startNode.gameObject.name + " hasta " + finalNode.gameObject.name);
     }
     
     public override void ExitState(PlayerEnemies enemy)
@@ -31,15 +31,23 @@ public class PatrolAStar : State
     {
         if(inStar == true)
         {
-            idaAstar(enemy);
+            RecorrerStar(enemy);
         }
         else
         {
-            retornoAstar(enemy);
+            if(oneTime == true)
+            {
+                path.Reverse();
+                _currentWaypointIndex = 0;
+                oneTime = false;
+                isBack = true;
+            }
+            
+            RecorrerStar(enemy);
         }
     }
 
-    public void idaAstar(PlayerEnemies enemy)
+    public void RecorrerStar(PlayerEnemies enemy)
     {
         if (path.Count == 0) return;
 
@@ -56,33 +64,12 @@ public class PatrolAStar : State
 
             enemy.lastVisitedNode = Pathfinding.Instance.getClosestNode(waypoint.position);
             _currentWaypointIndex++;
-        }
-    }
 
-    public void retornoAstar(PlayerEnemies enemy)
-    {
-        if (path.Count == 0)
-        {
-            // Recalcula el camino hacia el primer nodo de la ruta de patrullaje
-            enemy.PathFindingState(); // Usa A* para volver a patrullar
-            _currentWaypointIndex = 0;
-        }
-
-        Transform waypoint = path[_currentWaypointIndex].transform;
-        enemy.MoveTowards(waypoint.position);
-
-        if (Vector3.Distance(enemy.transform.position, waypoint.position) < 0.5f)
-        {
-            if (_currentWaypointIndex == path.Count - 1)
+            if(isBack == true && _currentWaypointIndex == path.Count - 1)
             {
-                // Vuelve al patrullaje normal
-                enemy.StateMachine.ChangeState(new PatrolState(), enemy);
-                return;
+                Debug.Log("Volviendo a Patrol");
+                enemy.StateMachine.ChangeState(new PatrolAStar(), enemy);
             }
-
-            enemy.lastVisitedNode = Pathfinding.Instance.getClosestNode(waypoint.position);
-            _currentWaypointIndex++;
         }
     }
-
 }

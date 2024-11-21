@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public bool alert;
     public string alertGameObject = "";
 
+    public List<GameObject> skullsInTravel = new List<GameObject>();
     private void Start()
     {
         if(Instance == null)

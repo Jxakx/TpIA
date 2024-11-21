@@ -6,7 +6,7 @@ public class ChaseState : State
 {
     public override void EnterState(PlayerEnemies enemy)
     {
-        Debug.Log("Iniciando Persecución " + enemy.gameObject.name);
+        //Debug.Log("Iniciando Persecución " + enemy.gameObject.name);
     }
 
     public override void UpdateState(PlayerEnemies enemy)
@@ -22,7 +22,7 @@ public class ChaseState : State
             // Si el jugador ya no está visible, utiliza A* para dirigirse al último nodo conocido
             if (enemy.lastVisitedNode != null)
             {
-                enemy.PathFindingState(); // Calcula el camino con A* hacia la última posición conocida del jugador
+                //enemy.PathFindingState(); // Calcula el camino con A* hacia la última posición conocida del jugador
                 enemy.StateMachine.ChangeState(new PatrolAStar(), enemy);
             }
             else
@@ -39,6 +39,6 @@ public class ChaseState : State
 
     public override void ExitState(PlayerEnemies enemy)
     {
-        Debug.Log("Saliendo de Persecución");
+        //Debug.Log("Saliendo de Persecución");
     }
 }

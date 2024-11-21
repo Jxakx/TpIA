@@ -321,6 +321,7 @@ MonoBehaviour:
   - {fileID: 767483751}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1 &21809933
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,6 +754,7 @@ MonoBehaviour:
   - {fileID: 120603887}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1001 &84720772
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -950,6 +952,7 @@ MonoBehaviour:
   - {fileID: 1020280536}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1 &177837942
 GameObject:
   m_ObjectHideFlags: 0
@@ -1074,6 +1077,7 @@ MonoBehaviour:
   - {fileID: 1787623254}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1 &201965556
 GameObject:
   m_ObjectHideFlags: 0
@@ -1198,6 +1202,7 @@ MonoBehaviour:
   - {fileID: 19184457}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1 &356682938 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1abf712ed462ec6478e484c5320ee04f, type: 3}
@@ -1642,6 +1647,7 @@ MonoBehaviour:
   - {fileID: 767483751}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1 &655978455
 GameObject:
   m_ObjectHideFlags: 0
@@ -1966,6 +1972,7 @@ MonoBehaviour:
   - {fileID: 1998502288}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1 &767483746
 GameObject:
   m_ObjectHideFlags: 0
@@ -2090,6 +2097,7 @@ MonoBehaviour:
   - {fileID: 19184457}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1 &780972975
 GameObject:
   m_ObjectHideFlags: 0
@@ -2368,7 +2376,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
-  _speed: 4
+  _speed: 6
   rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
@@ -2383,7 +2391,7 @@ MonoBehaviour:
   - {fileID: 1772663221}
   _path: []
   lastVisitedNode: {fileID: 0}
-  pathFinding: {fileID: 36589404}
+  funcionesPaths: {fileID: 36589404}
   player: {fileID: 8846040465606918200}
 --- !u!1 &824623018
 GameObject:
@@ -2414,9 +2422,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 84720773}
   - {fileID: 3514541}
   - {fileID: 1242041431}
-  - {fileID: 84720773}
   - {fileID: 1831808318}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2547,7 +2555,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
-  _speed: 4
+  _speed: 6
   rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
@@ -2560,7 +2568,7 @@ MonoBehaviour:
   - {fileID: 1998502284}
   _path: []
   lastVisitedNode: {fileID: 0}
-  pathFinding: {fileID: 36589404}
+  funcionesPaths: {fileID: 36589404}
   player: {fileID: 8846040465606918200}
 --- !u!1 &955932102
 GameObject:
@@ -2686,6 +2694,7 @@ MonoBehaviour:
   - {fileID: 1314295780}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1 &962413991
 GameObject:
   m_ObjectHideFlags: 0
@@ -2811,6 +2820,7 @@ MonoBehaviour:
   - {fileID: 177837947}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -3132,6 +3142,7 @@ MonoBehaviour:
   - {fileID: 752317741}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1 &1040194169
 GameObject:
   m_ObjectHideFlags: 0
@@ -3256,6 +3267,7 @@ MonoBehaviour:
   - {fileID: 1772663225}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1 &1111101412
 GameObject:
   m_ObjectHideFlags: 0
@@ -3465,7 +3477,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1abf712ed462ec6478e484c5320ee04f, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2608501106575013145, guid: 1abf712ed462ec6478e484c5320ee04f, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -3501,7 +3513,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
-  _speed: 4
+  _speed: 6
   rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
@@ -3514,7 +3526,7 @@ MonoBehaviour:
   - {fileID: 962413992}
   _path: []
   lastVisitedNode: {fileID: 0}
-  pathFinding: {fileID: 36589404}
+  funcionesPaths: {fileID: 36589404}
   player: {fileID: 8846040465606918200}
 --- !u!1 &1314295775
 GameObject:
@@ -3640,6 +3652,7 @@ MonoBehaviour:
   - {fileID: 1505399200}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1 &1328609066
 GameObject:
   m_ObjectHideFlags: 0
@@ -3974,6 +3987,7 @@ MonoBehaviour:
   - {fileID: 1314295780}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1 &1505503190
 GameObject:
   m_ObjectHideFlags: 0
@@ -4204,6 +4218,7 @@ MonoBehaviour:
   - {fileID: 1787623254}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1 &1716359659
 GameObject:
   m_ObjectHideFlags: 0
@@ -4433,6 +4448,7 @@ MonoBehaviour:
   - {fileID: 1040194174}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1 &1777756673
 GameObject:
   m_ObjectHideFlags: 0
@@ -4663,6 +4679,7 @@ MonoBehaviour:
   - {fileID: 201965561}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1 &1801113476
 GameObject:
   m_ObjectHideFlags: 0
@@ -4787,6 +4804,7 @@ MonoBehaviour:
   - {fileID: 537240757}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1001 &1831808317
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4841,7 +4859,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1e92e2996370b3a4dbbc469062824435, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2608501106575013145, guid: 1e92e2996370b3a4dbbc469062824435, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -4882,7 +4900,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
-  _speed: 4
+  _speed: 6
   rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
@@ -4895,7 +4913,7 @@ MonoBehaviour:
   - {fileID: 19184453}
   _path: []
   lastVisitedNode: {fileID: 0}
-  pathFinding: {fileID: 36589404}
+  funcionesPaths: {fileID: 36589404}
   player: {fileID: 8846040465606918200}
 --- !u!1 &1998502283
 GameObject:
@@ -5021,6 +5039,7 @@ MonoBehaviour:
   - {fileID: 962413996}
   detectionRadius: 4
   previousNode: {fileID: 0}
+  cost: 1
 --- !u!1 &2020588223
 GameObject:
   m_ObjectHideFlags: 0
@@ -5261,7 +5280,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5269,7 +5288,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.4
+      value: 20.1
       objectReference: {fileID: 0}
     - target: {fileID: 8914325232856036538, guid: c57302d0e5f3bdd489daa60bd1a3766f, type: 3}
       propertyPath: m_LocalRotation.w

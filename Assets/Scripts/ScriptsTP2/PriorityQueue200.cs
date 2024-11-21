@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-public class PriorityQueue
+public class PriorityQueue200
 {
     private Dictionary<Node, float> _priorityQueue = new Dictionary<Node, float>();
 

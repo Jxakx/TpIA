@@ -5,7 +5,7 @@ using UnityEngine;
 public class Pathfinding : MonoBehaviour
 {
     private HashSet<Node> _closedNodes = new HashSet<Node>();
-    private PriorityQueue _openNodes = new PriorityQueue();
+    private PriorityQueue2 _openNodes = new PriorityQueue2();
 
     public static Pathfinding Instance;
 
@@ -18,59 +18,59 @@ public class Pathfinding : MonoBehaviour
         Instance = this;
     }
 
-    public List<Node> GetPath(Node starNode, Node endNode)
-    {
-        _closedNodes.Clear();
-        _openNodes.Clear();
+    //public List<Node> GetPath(Node starNode, Node endNode)
+    //{
+    //    _closedNodes.Clear();
+    //    _openNodes.Clear();
 
-        starNode.Heuristic = 0;
+    //    starNode.Heuristic = 0;
 
-        var actualNode = starNode;
+    //    var actualNode = starNode;
 
-        while (actualNode != null && actualNode != endNode)
-        {
-            foreach (var neighbour in actualNode.Neighbours)
-            {
-                if (_closedNodes.Contains(neighbour)) continue;
+    //    while (actualNode != null && actualNode != endNode)
+    //    {
+    //        foreach (var neighbour in actualNode.Neighbours)
+    //        {
+    //            if (_closedNodes.Contains(neighbour)) continue;
 
-                var heuristic = actualNode.Heuristic + 1 + Vector3.Distance(neighbour.transform.position, endNode.transform.position);
+    //            var heuristic = actualNode.Heuristic + 1 + Vector3.Distance(neighbour.transform.position, endNode.transform.position);
 
-                if(neighbour.Heuristic > heuristic)
-                {
-                    neighbour.Heuristic = heuristic;
-                    neighbour.previousNode = actualNode;
-                }
+    //            if(neighbour.Heuristic > heuristic)
+    //            {
+    //                neighbour.Heuristic = heuristic;
+    //                neighbour.previousNode = actualNode;
+    //            }
 
-                _openNodes.Enqueue(neighbour, neighbour.Heuristic);
-            }
+    //            _openNodes.Enqueue(neighbour, neighbour.Heuristic);
+    //        }
 
-            _closedNodes.Add(actualNode);
-            actualNode = _openNodes.Dequeue();
-        }
+    //        _closedNodes.Add(actualNode);
+    //        actualNode = _openNodes.Dequeue();
+    //    }
 
-        var finalPath = new List<Node>();
-        actualNode = endNode;
-        var actualPreviousNode = actualNode.previousNode;
-        finalPath.Add(actualNode);
+    //    var finalPath = new List<Node>();
+    //    actualNode = endNode;
+    //    var actualPreviousNode = actualNode.previousNode;
+    //    finalPath.Add(actualNode);
 
-        while(actualNode != null && actualNode != starNode && actualNode.previousNode != null && actualPreviousNode.previousNode != null)
-        {
-            if(OnSight(actualNode.transform.position, actualPreviousNode.previousNode.transform.position, _obstacleMask))
-            {
-                actualPreviousNode = actualPreviousNode.previousNode;
-            }
-            else
-            {
-                finalPath.Add(actualNode);
-                actualNode = actualNode.previousNode;
-                actualPreviousNode = actualPreviousNode.previousNode;
-            }
+    //    while(actualNode != null && actualNode != starNode && actualNode.previousNode != null && actualPreviousNode.previousNode != null)
+    //    {
+    //        if(OnSight(actualNode.transform.position, actualPreviousNode.previousNode.transform.position, _obstacleMask))
+    //        {
+    //            actualPreviousNode = actualPreviousNode.previousNode;
+    //        }
+    //        else
+    //        {
+    //            finalPath.Add(actualNode);
+    //            actualNode = actualNode.previousNode;
+    //            actualPreviousNode = actualPreviousNode.previousNode;
+    //        }
             
-        }
+    //    }
 
-        finalPath.Reverse();
-        return finalPath;
-    }
+    //    finalPath.Reverse();
+    //    return finalPath;
+    //}
     //nodo mas cercano a la calavera
     public Node getClosestNode(Vector3 position)
     {
