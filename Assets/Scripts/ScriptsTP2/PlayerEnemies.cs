@@ -57,7 +57,7 @@ public class PlayerEnemies : MonoBehaviour
             float distanceToPlayer = Vector3.Distance(transform.position, _target.position);
 
             // Si está demasiado cerca del jugador, cambiar a patrullaje
-            if (distanceToPlayer <= 0.5f) // Distancia de choque con el jugador
+            if (distanceToPlayer <= 0.5f)
             {
                 StateMachine.ChangeState(new PatrolState(), this);
                 return false;
@@ -67,6 +67,10 @@ public class PlayerEnemies : MonoBehaviour
             if (distanceToPlayer <= viewRange && !Physics.Raycast(transform.position, dirToPlayer, distanceToPlayer, _obstacleMask))
             {
                 return true;
+            }
+            else if (distanceToPlayer <= viewRange && Physics.Raycast(transform.position, dirToPlayer, distanceToPlayer, _obstacleMask))
+            {
+                StateMachine.ChangeState(new PatrolState(), this);
             }
         }
 
