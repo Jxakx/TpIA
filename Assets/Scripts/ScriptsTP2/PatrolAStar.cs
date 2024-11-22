@@ -9,17 +9,23 @@ public class PatrolAStar : State
     private List<Node> path = new List<Node>();
     public int _currentWaypointIndex = 0;
     private bool inStar = true;
+
+    public bool oneTime = true;
+    public bool isBack = false;
+
     public override void EnterState(PlayerEnemies enemy)
     {
-        Debug.Log("Entre a clase Star");
-        startNode = enemy.pathFinding.getClosestNode(enemy.transform.position);
-        finalNode = enemy.pathFinding.getClosestNode(enemy.player.position);
-        path = enemy.pathFinding.GetPath(startNode, finalNode);
-        Debug.Log("Path creado");
-        foreach(var item in path)
+        startNode = enemy.funcionesPaths.getClosestNode(enemy.transform.position);
+        finalNode = enemy.funcionesPaths.getClosestNode(enemy.player.position);
+
+        if(startNode == finalNode)
         {
-            Debug.Log(item);
+            enemy.StateMachine.ChangeState(new PatrolState(), enemy); // Si el startNode yt el finalNode es el mismo nodo, vuelve a patrullar.
         }
+
+        path = enemy.pathFinding.AStar(startNode, finalNode);
+        path.Reverse();
+        Debug.Log("XXXXXXXXXXX" + enemy.gameObject.name + " Desde" + startNode.gameObject.name + " hasta " + finalNode.gameObject.name);
     }
     
     public override void ExitState(PlayerEnemies enemy)
@@ -31,63 +37,46 @@ public class PatrolAStar : State
     {
         if(inStar == true)
         {
-            idaAstar(enemy);
+            RecorrerStar(enemy);
         }
         else
         {
-            retornoAstar(enemy);
+            if(oneTime == true)
+            {
+                path.Reverse();
+                _currentWaypointIndex = 0;
+                oneTime = false;
+                isBack = true;
+            }
+            
+            RecorrerStar(enemy);
         }
     }
 
-    public void idaAstar(PlayerEnemies enemy)
+    public void RecorrerStar(PlayerEnemies enemy)
     {
         if (path.Count == 0) return;
 
-        // Moverse hacia el waypoint actual con rotación
         Transform waypoint = path[_currentWaypointIndex].transform;
         enemy.MoveTowards(waypoint.position);
 
-        // Si alcanza el waypoint actual, actualiza el último nodo visitado
         if (Vector3.Distance(enemy.transform.position, waypoint.position) < 0.5f)
         {
-            if (path[_currentWaypointIndex] == finalNode)
+            if (_currentWaypointIndex == path.Count - 1) // Si es el último nodo, cambia el estado
             {
-                //estrella en reversa
                 inStar = false;
                 return;
             }
-            // Actualiza el último nodo visitado
+
             enemy.lastVisitedNode = Pathfinding.Instance.getClosestNode(waypoint.position);
+            _currentWaypointIndex++;
 
-            // Cambia al siguiente waypoint
-            _currentWaypointIndex = (_currentWaypointIndex + 1);
-        }
-
-    }
-
-    public void retornoAstar(PlayerEnemies enemy)
-    {
-        if (path.Count == 0) return;
-        _currentWaypointIndex = 0;
-        path.Reverse();
-        
-        // Moverse hacia el waypoint actual con rotación
-        Transform waypoint = path[_currentWaypointIndex].transform;
-        enemy.MoveTowards(waypoint.position);
-
-        // Si alcanza el waypoint actual, actualiza el último nodo visitado
-        if (Vector3.Distance(enemy.transform.position, waypoint.position) < 0.5f)
-        {
-            if (path[_currentWaypointIndex] == startNode)
+            if(isBack == true && _currentWaypointIndex == path.Count - 1)
             {
-                //estrella en reversa
-                enemy.StateMachine.ChangeState(new PatrolAStar(), enemy);
+                Debug.Log("Volviendo a Patrol");
+                GameManager.Instance.skullsInTravel.Remove(enemy.gameObject);
+                enemy.StateMachine.ChangeState(new PatrolState(), enemy);
             }
-            // Actualiza el último nodo visitado
-            enemy.lastVisitedNode = Pathfinding.Instance.getClosestNode(waypoint.position);
-
-            // Cambia al siguiente waypoint
-            _currentWaypointIndex = (_currentWaypointIndex + 1);
         }
     }
 }

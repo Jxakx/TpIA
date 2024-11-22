@@ -22,16 +22,16 @@ public class PlayerEnemies : MonoBehaviour
 
     private Vector3 _desiredDir;
     public List<Node> _path = new List<Node>();
-
     public StateMachine StateMachine { get; private set; } = new StateMachine();
-
     public Transform Player => _target;
     public float Speed => _speed;
     public List<Transform> Waypoints => _waypoints;
 
     public Node lastVisitedNode; // Nodo visitado más recientemente
 
-    public Pathfinding pathFinding;
+
+    public PathFinding2 pathFinding = new PathFinding2();
+    public Pathfinding funcionesPaths;
 
     public Transform player;
 
@@ -46,30 +46,38 @@ public class PlayerEnemies : MonoBehaviour
         StateMachine.Update(this);
     }
 
-    /// <summary>
-    /// Comprueba si el jugador está en el campo de visión.
-    /// </summary>
+
     public bool IsPlayerInSight()
     {
         Vector3 dirToPlayer = (_target.position - transform.position).normalized;
 
+        // Verificar si el jugador está dentro del ángulo de visión
         if (Vector3.Angle(transform.forward, dirToPlayer) < viewAngle / 2)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, _target.position);
 
-            if (distanceToPlayer <= viewRange &&
-                !Physics.Raycast(transform.position, dirToPlayer, distanceToPlayer, _obstacleMask))
+            // Si está demasiado cerca del jugador, cambiar a patrullaje
+            if (distanceToPlayer <= 0.5f)
+            {
+                StateMachine.ChangeState(new PatrolState(), this);
+                return false;
+            }
+
+            // Si no hay un obstáculo bloqueando la visión, devolver true (jugador está visible)
+            if (distanceToPlayer <= viewRange && !Physics.Raycast(transform.position, dirToPlayer, distanceToPlayer, _obstacleMask))
             {
                 return true;
             }
+            else if (distanceToPlayer <= viewRange && Physics.Raycast(transform.position, dirToPlayer, distanceToPlayer, _obstacleMask))
+            {
+                StateMachine.ChangeState(new PatrolState(), this);
+            }
         }
 
-        return false;
+        return false; // No ve al jugador ni hay razón para continuar el estado actual
     }
 
-    /// <summary>
-    /// Movimiento hacia un objetivo con rotación.
-    /// </summary>
+
     public void MoveTowards(Vector3 targetPosition)
     {
         // Calcula la dirección hacia el objetivo
@@ -96,42 +104,44 @@ public class PlayerEnemies : MonoBehaviour
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
-    private void PathFindingState()
-    {
-        if (Vector3.Distance(transform.position, _target.position) < .5f)
-        {
-            return;
-        }
+    //public void PathFindingState()
+    //{
+    //    // Paso 1: Verificar si estamos cerca del objetivo
+    //    if (Vector3.Distance(transform.position, _target.position) < 0.5f)
+    //    {
+    //        return; // Si ya estamos cerca del objetivo, no hacemos nada
+    //    }
 
-        if (_path.Count <= 0)
-        {
-            _path = Pathfinding.Instance.GetPath(
-                Pathfinding.Instance.getClosestNode(transform.position),
-                Pathfinding.Instance.getClosestNode(_target.position)
-            );
+    //    // Paso 2: Comprobar si necesitamos calcular un nuevo camino
+    //    if (_path.Count <= 0)
+    //    {
+    //        // Paso 3: Calcular el camino desde el nodo más cercano a la posición actual al nodo más cercano al objetivo
+    //        _path = Pathfinding.Instance.GetPath(
+    //            Pathfinding.Instance.getClosestNode(transform.position),
+    //            Pathfinding.Instance.getClosestNode(_target.position)
+    //        );
 
-            if (_path.Count == 0)
-            {
-                return;
-            }
-        }
+    //        if (_path.Count == 0)
+    //        {
+    //            return; // Si no se encontró un camino, salir
+    //        }
+    //    }
 
-        // Mueve hacia el primer nodo de la ruta calculada
-        MoveTowards(_path[0].transform.position);
+    //    // Paso 4: Moverse hacia el primer nodo de la ruta calculada
+    //    if (_path.Count > 0)
+    //    {
+    //        Transform nextNode = _path[0].transform;
 
-        // Si alcanza el nodo actual, remueve el nodo de la ruta
-        if (Vector3.Distance(transform.position, _path[0].transform.position) < 0.5f)
-        {
-            _path.RemoveAt(0);
-        }
+    //        // Mueve hacia el nodo objetivo
+    //        MoveTowards(nextNode.position);
 
-        if (_path.Count > 0 && Vector3.Distance(transform.position, _path[0].transform.position) < 0.5f)
-        {
-            lastVisitedNode = _path[0]; // Guarda el nodo alcanzado
-            _path.RemoveAt(0);
-        }
-
-    }
+    //        // Si alcanza el nodo actual, remuévelo de la lista
+    //        if (Vector3.Distance(transform.position, nextNode.position) < 0.5f)
+    //        {
+    //            _path.RemoveAt(0); // Eliminar el nodo alcanzado de la lista
+    //        }
+    //    }
+    //}
 
 
     /// <summary>
@@ -185,6 +195,9 @@ public class PlayerEnemies : MonoBehaviour
         // Cambia de color si el jugador está en el rango de visión
         Gizmos.color = IsPlayerInSight() ? Color.green : Color.red;
         Gizmos.DrawWireSphere(transform.position, viewRange);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, _obstacleDist);
     }
 
     private Vector3 DirFromAngle(float angle)

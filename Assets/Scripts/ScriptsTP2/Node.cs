@@ -21,6 +21,15 @@ public class Node : MonoBehaviour
 
     public Node previousNode;
 
+    public int cost = 1;
+
+    public List<Node> GetNeighborsNodes()
+    {
+        return _neighbours;
+    }
+
+
+
     private void Awake()
     {
         var colliders = Physics.OverlapSphere(transform.position, detectionRadius, LayerMask.GetMask("Node"));
@@ -62,6 +71,7 @@ public class Node : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.DrawSphere(transform.position, detectionRadius);
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 }

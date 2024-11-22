@@ -7,10 +7,9 @@ public class PatrolState : State
     private int _currentWaypointIndex = 0;
     private Node startNode;
 
-
     public override void EnterState(PlayerEnemies enemy)//enemy es el script playerEnemies
     {
-        Debug.Log("Iniciando Patrullaje" + enemy.gameObject.name);
+        //Debug.Log("Iniciando Patrullaje" + enemy.gameObject.name);
 
         if (startNode != null) // Si hay un nodo inicial específico
         {
@@ -29,9 +28,6 @@ public class PatrolState : State
     {
         this.startNode = startNode;
     }
-
-    
-
 
     public override void UpdateState(PlayerEnemies enemy)
     {
@@ -54,10 +50,18 @@ public class PatrolState : State
         // Cambiar al estado de persecución si detecta al jugador
         if (enemy.IsPlayerInSight())
         {
+            foreach (var item in GameManager.Instance.allSkulls)
+            {
+                if(item != enemy.gameObject)
+                {
+                    GameManager.Instance.skullsInTravel.Add(item);
+                }
+            }
+
             enemy.StateMachine.ChangeState(new ChaseState(), enemy);
         }
-
-        if(enemy.gameObject.name != GameManager.Instance.alertGameObject && GameManager.Instance.alertGameObject != "")
+        // Indica a las calaveras que tienen que hacer A* al punto donde me detectaron
+        if (enemy.gameObject.name != GameManager.Instance.alertGameObject && GameManager.Instance.alertGameObject != "" && GameManager.Instance.skullsInTravel.Contains(enemy.gameObject) == true )
         {
             enemy.StateMachine.ChangeState(new PatrolAStar(), enemy);
         }
@@ -65,6 +69,6 @@ public class PatrolState : State
 
     public override void ExitState(PlayerEnemies enemy)
     {
-        Debug.Log("Saliendo de Patrullaje" + enemy.gameObject.name);
+        //Debug.Log("Saliendo de Patrullaje" + enemy.gameObject.name);
     }
 }

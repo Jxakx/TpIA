@@ -6,20 +6,20 @@ public class ChaseState : State
 {
     public override void EnterState(PlayerEnemies enemy)
     {
-        Debug.Log("Iniciando Persecución " + enemy.gameObject.name);
+        //Debug.Log("Iniciando Persecución " + enemy.gameObject.name);
     }
 
     public override void UpdateState(PlayerEnemies enemy)
     {
         GameManager.Instance.alert = true;
         GameManager.Instance.alertGameObject = enemy.gameObject.name;
+
         if (!enemy.IsPlayerInSight())
-        {
-            GameManager.Instance.alert = false;
-            GameManager.Instance.alertGameObject = "";
-            if (enemy.lastVisitedNode != null) // Si hay un nodo visitado
+        {           
+            // Si el jugador ya no está visible, utiliza A* para dirigirse al último nodo conocido
+            if (enemy.lastVisitedNode != null)
             {
-                enemy.StateMachine.ChangeState(new PatrolState(enemy.lastVisitedNode), enemy);
+                enemy.StateMachine.ChangeState(new PatrolAStar(), enemy);
             }
             else
             {
@@ -28,14 +28,19 @@ public class ChaseState : State
             return;
         }
 
-        // Perseguir al jugador
-        enemy.MoveTowards(enemy.Player.position);
+        if (GameManager.Instance.skullsInTravel.Count == 0)
+        {
+            GameManager.Instance.alert = false;
+            GameManager.Instance.alertGameObject = "";
+        }
 
-        
+        // Perseguir al jugador directamente si está en la línea de visión
+        enemy.MoveTowards(enemy.Player.position);
     }
+
 
     public override void ExitState(PlayerEnemies enemy)
     {
-        Debug.Log("Saliendo de Persecución");
+        //Debug.Log("Saliendo de Persecución");
     }
 }
