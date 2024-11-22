@@ -51,24 +51,28 @@ public class PlayerEnemies : MonoBehaviour
     {
         Vector3 dirToPlayer = (_target.position - transform.position).normalized;
 
+        // Verificar si el jugador está dentro del ángulo de visión
         if (Vector3.Angle(transform.forward, dirToPlayer) < viewAngle / 2)
         {
-            
             float distanceToPlayer = Vector3.Distance(transform.position, _target.position);
 
-            if(distanceToPlayer <= 0.5f) //Distancia de choque con el player
+            // Si está demasiado cerca del jugador, cambiar a patrullaje
+            if (distanceToPlayer <= 0.5f) // Distancia de choque con el jugador
             {
-                StateMachine.ChangeState(new PatrolState(), this); //Cambie el PatrolAStar por el PatrolState
+                StateMachine.ChangeState(new PatrolState(), this);
+                return false;
             }
 
+            // Si no hay un obstáculo bloqueando la visión, devolver true (jugador está visible)
             if (distanceToPlayer <= viewRange && !Physics.Raycast(transform.position, dirToPlayer, distanceToPlayer, _obstacleMask))
             {
                 return true;
             }
         }
 
-        return false;
+        return false; // No ve al jugador ni hay razón para continuar el estado actual
     }
+
 
     public void MoveTowards(Vector3 targetPosition)
     {
