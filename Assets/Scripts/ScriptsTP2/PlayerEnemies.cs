@@ -61,8 +61,7 @@ public class PlayerEnemies : MonoBehaviour
                 StateMachine.ChangeState(new PatrolState(), this); //Cambie el PatrolAStar por el PatrolState
             }
 
-            if (distanceToPlayer <= viewRange &&
-                !Physics.Raycast(transform.position, dirToPlayer, distanceToPlayer, _obstacleMask))
+            if (distanceToPlayer <= viewRange && !Physics.Raycast(transform.position, dirToPlayer, distanceToPlayer, _obstacleMask))
             {
                 return true;
             }
