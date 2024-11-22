@@ -177,7 +177,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7f1f07b08f346dd438d24d47a9c9e36f, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2608501106575013145, guid: 7f1f07b08f346dd438d24d47a9c9e36f, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -2635,8 +2635,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 824623018}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -25.09597, y: 1.15125, z: 32.304665}
+  m_LocalRotation: {x: -0, y: -0.70710677, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -25.945894, y: 0.48740494, z: -24.664076}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2644,7 +2644,7 @@ Transform:
   - {fileID: 3514541}
   - {fileID: 1242041431}
   - {fileID: 1831808318}
-  m_Father: {fileID: 2112776061}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &872406346
 GameObject:
@@ -2773,7 +2773,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
-  _speed: 10
+  _speed: 5
   rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
@@ -3736,7 +3736,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
-  _speed: 10
+  _speed: 5
   rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
@@ -5294,7 +5294,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1e92e2996370b3a4dbbc469062824435, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2608501106575013145, guid: 1e92e2996370b3a4dbbc469062824435, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -5749,10 +5749,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1111101413}
   - {fileID: 1973034701}
   - {fileID: 23881652}
-  - {fileID: 1111101413}
-  - {fileID: 824623019}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1001 &8846040465606918199
@@ -5858,4 +5857,5 @@ SceneRoots:
   - {fileID: 8846040465606918199}
   - {fileID: 36589405}
   - {fileID: 793310178}
+  - {fileID: 824623019}
   - {fileID: 2112776061}
