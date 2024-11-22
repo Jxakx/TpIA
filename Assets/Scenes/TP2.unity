@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748171, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -319,7 +319,6 @@ MonoBehaviour:
   - {fileID: 201965561}
   - {fileID: 1801113481}
   - {fileID: 767483751}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1 &21809933
@@ -752,7 +751,6 @@ MonoBehaviour:
   - {fileID: 1772663225}
   - {fileID: 955932107}
   - {fileID: 120603887}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1001 &84720772
@@ -950,7 +948,6 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 71750398}
   - {fileID: 1020280536}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 164
 --- !u!1 &152481869
@@ -1181,7 +1178,6 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 962413996}
   - {fileID: 1787623254}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1 &201965556
@@ -1306,7 +1302,6 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 1787623254}
   - {fileID: 19184457}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1 &232727737
@@ -1857,7 +1852,6 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 1801113481}
   - {fileID: 767483751}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1 &655978455
@@ -2182,7 +2176,6 @@ MonoBehaviour:
   - {fileID: 1020280536}
   - {fileID: 1546160613}
   - {fileID: 1998502288}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1 &767483746
@@ -2307,7 +2300,6 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 537240757}
   - {fileID: 19184457}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1 &780972975
@@ -2596,8 +2588,6 @@ MonoBehaviour:
   _target: {fileID: 8846040465606918200}
   _speed: 5
   rotationSpeed: 5
-  seekWeight: 0.5
-  obstacleWeight: 0.743
   viewRange: 5
   viewAngle: 90
   _waypoints:
@@ -2775,8 +2765,6 @@ MonoBehaviour:
   _target: {fileID: 8846040465606918200}
   _speed: 5
   rotationSpeed: 5
-  seekWeight: 0.5
-  obstacleWeight: 0.743
   viewRange: 5
   viewAngle: 90
   _waypoints:
@@ -2915,7 +2903,6 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 71750398}
   - {fileID: 1314295780}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1 &962413991
@@ -3041,7 +3028,6 @@ MonoBehaviour:
   - {fileID: 1546160613}
   - {fileID: 1998502288}
   - {fileID: 177837947}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1 &963194225
@@ -3363,7 +3349,6 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 120603887}
   - {fileID: 752317741}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1 &1040194169
@@ -3488,7 +3473,6 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 1505399200}
   - {fileID: 1772663225}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1 &1111101412
@@ -3738,8 +3722,6 @@ MonoBehaviour:
   _target: {fileID: 8846040465606918200}
   _speed: 5
   rotationSpeed: 5
-  seekWeight: 0.5
-  obstacleWeight: 0.743
   viewRange: 5
   viewAngle: 90
   _waypoints:
@@ -3873,7 +3855,6 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 955932107}
   - {fileID: 1505399200}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1 &1328609066
@@ -4208,7 +4189,6 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 1040194174}
   - {fileID: 1314295780}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1 &1505503190
@@ -4545,7 +4525,6 @@ MonoBehaviour:
   - {fileID: 752317741}
   - {fileID: 962413996}
   - {fileID: 1787623254}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1 &1674096256
@@ -4881,7 +4860,6 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 71750398}
   - {fileID: 1040194174}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1 &1777756673
@@ -5112,7 +5090,6 @@ MonoBehaviour:
   - {fileID: 1546160613}
   - {fileID: 177837947}
   - {fileID: 201965561}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1 &1801113476
@@ -5237,7 +5214,6 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 19184457}
   - {fileID: 537240757}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1001 &1831808317
@@ -5337,8 +5313,6 @@ MonoBehaviour:
   _target: {fileID: 8846040465606918200}
   _speed: 5
   rotationSpeed: 5
-  seekWeight: 0.5
-  obstacleWeight: 0.743
   viewRange: 5
   viewAngle: 90
   _waypoints:
@@ -5507,7 +5481,6 @@ MonoBehaviour:
   _neighbours:
   - {fileID: 752317741}
   - {fileID: 962413996}
-  detectionRadius: 0
   previousNode: {fileID: 0}
   cost: 1
 --- !u!1 &2020588223

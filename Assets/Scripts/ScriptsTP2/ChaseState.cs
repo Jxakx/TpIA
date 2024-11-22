@@ -6,7 +6,7 @@ public class ChaseState : State
 {
     public override void EnterState(PlayerEnemies enemy)
     {
-        //Debug.Log("Iniciando Persecución " + enemy.gameObject.name);
+        
     }
 
     public override void UpdateState(PlayerEnemies enemy)
@@ -23,7 +23,7 @@ public class ChaseState : State
             }
             else
             {
-                enemy.StateMachine.ChangeState(new PatrolState(), enemy); // Patrullaje normal si no hay nodo guardado
+                enemy.StateMachine.ChangeState(new PatrolState(), enemy);
             }
             return;
         }
@@ -34,13 +34,12 @@ public class ChaseState : State
             GameManager.Instance.alertGameObject = "";
         }
 
-        // Perseguir al jugador directamente si está en la línea de visión
         enemy.MoveTowards(enemy.Player.position);
     }
 
 
     public override void ExitState(PlayerEnemies enemy)
     {
-        //Debug.Log("Saliendo de Persecución");
+        
     }
 }

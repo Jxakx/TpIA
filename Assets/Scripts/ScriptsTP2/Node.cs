@@ -15,8 +15,6 @@ public class Node : MonoBehaviour
     }
 
     [SerializeField] private List<Node> _neighbours = new();
-
-    [SerializeField] private float detectionRadius;
     public List<Node> Neighbours { get { return _neighbours; } }
 
     public Node previousNode;
@@ -32,24 +30,12 @@ public class Node : MonoBehaviour
 
     private void Awake()
     {
-        var colliders = Physics.OverlapSphere(transform.position, detectionRadius, LayerMask.GetMask("Node"));
-
         heuristic = 9999;
-
-        foreach (var collider in colliders)
-        {
-            var node = collider.GetComponent<Node>();
-            
-            if(node != null && node != this && Pathfinding.OnSight(transform.position,node.transform.position,Pathfinding.Instance._obstacleMask))
-            {
-                _neighbours.Add(node);
-            }
-        }
     }
 
     private void Start()
     {
-        Pathfinding.Instance.nodes.Add(this);
+        FuncionesPaths.Instance.nodes.Add(this);
     }
 
     public void SetHeuristic(Vector3 from, Vector3 target, float previousheuristic)
@@ -69,9 +55,4 @@ public class Node : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
-    }
 }

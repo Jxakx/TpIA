@@ -21,7 +21,6 @@ public class PathFinding2
         while (frontier.AllCostCount > 0)
         {
             Node current = frontier.Get();
-            //GameManager.Instance.ChangeGameObjectoColor(current.nodoColor, Color.blue);
 
             if (current == goal)
             {
@@ -30,8 +29,6 @@ public class PathFinding2
 
                 while (nodeToAdd != null)
                 {
-                    //GameManager.Instance.ChangeGameObjectoColor(nodeToAdd.nodoColor, Color.green);
-
                     path.Add(nodeToAdd);
                     nodeToAdd = camefrom[nodeToAdd];
                 }
@@ -40,7 +37,6 @@ public class PathFinding2
 
             foreach (Node nodeAround in current.GetNeighborsNodes()) //Me da los nodos vecinos
             {
-                //if (nodeAround.isBlock) continue;
 
                 float newCost = costSoFar[current] + nodeAround.cost;
                 float dist = (goal.transform.position - nodeAround.transform.position).magnitude;
@@ -60,8 +56,7 @@ public class PathFinding2
                 }
             }
         }
-              
-
+            
         return null;
     }    
 }

@@ -7,11 +7,10 @@ public class PatrolState : State
     private int _currentWaypointIndex = 0;
     private Node startNode;
 
-    public override void EnterState(PlayerEnemies enemy)//enemy es el script playerEnemies
+    public override void EnterState(PlayerEnemies enemy)
     {
-        //Debug.Log("Iniciando Patrullaje" + enemy.gameObject.name);
 
-        if (startNode != null) // Si hay un nodo inicial específico
+        if (startNode != null) 
         {
             // Encuentra el índice del nodo más cercano al último nodo visitado
             for (int i = 0; i < enemy.Waypoints.Count; i++)
@@ -41,13 +40,13 @@ public class PatrolState : State
         if (Vector3.Distance(enemy.transform.position, waypoint.position) < 0.5f)
         {
             // Actualiza el último nodo visitado
-            enemy.lastVisitedNode = Pathfinding.Instance.getClosestNode(waypoint.position);
+            enemy.lastVisitedNode = FuncionesPaths.Instance.getClosestNode(waypoint.position);
 
             // Cambia al siguiente waypoint
             _currentWaypointIndex = (_currentWaypointIndex + 1) % enemy.Waypoints.Count;
         }
 
-        // Cambiar al estado de persecución si detecta al jugador
+        // Persigue si detecta al jugador
         if (enemy.IsPlayerInSight())
         {
             foreach (var item in GameManager.Instance.allSkulls)
@@ -69,6 +68,6 @@ public class PatrolState : State
 
     public override void ExitState(PlayerEnemies enemy)
     {
-        //Debug.Log("Saliendo de Patrullaje" + enemy.gameObject.name);
+        
     }
 }

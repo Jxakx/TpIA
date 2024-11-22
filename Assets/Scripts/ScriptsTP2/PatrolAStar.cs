@@ -20,12 +20,12 @@ public class PatrolAStar : State
 
         if(startNode == finalNode)
         {
-            enemy.StateMachine.ChangeState(new PatrolState(), enemy); // Si el startNode yt el finalNode es el mismo nodo, vuelve a patrullar.
+            enemy.StateMachine.ChangeState(new PatrolState(), enemy); // Si el startNode y el finalNode es el mismo nodo, vuelve a patrullar.
         }
 
         path = enemy.pathFinding.AStar(startNode, finalNode);
         path.Reverse();
-        Debug.Log("XXXXXXXXXXX" + enemy.gameObject.name + " Desde" + startNode.gameObject.name + " hasta " + finalNode.gameObject.name);
+        Debug.Log(enemy.gameObject.name + " Desde" + startNode.gameObject.name + " hasta " + finalNode.gameObject.name);
     }
     
     public override void ExitState(PlayerEnemies enemy)
@@ -68,7 +68,7 @@ public class PatrolAStar : State
                 return;
             }
 
-            enemy.lastVisitedNode = Pathfinding.Instance.getClosestNode(waypoint.position);
+            enemy.lastVisitedNode = FuncionesPaths.Instance.getClosestNode(waypoint.position);
             _currentWaypointIndex++;
 
             if(isBack == true && _currentWaypointIndex == path.Count - 1)
