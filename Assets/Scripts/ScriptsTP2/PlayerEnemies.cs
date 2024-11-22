@@ -56,9 +56,9 @@ public class PlayerEnemies : MonoBehaviour
             
             float distanceToPlayer = Vector3.Distance(transform.position, _target.position);
 
-            if(distanceToPlayer <= 0.7f)
+            if(distanceToPlayer <= 0.5f) //Distancia de choque con el player
             {
-                StateMachine.ChangeState(new PatrolAStar(), this);
+                StateMachine.ChangeState(new PatrolState(), this); //Cambie el PatrolAStar por el PatrolState
             }
 
             if (distanceToPlayer <= viewRange &&
