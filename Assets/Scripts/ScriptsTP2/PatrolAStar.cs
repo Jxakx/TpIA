@@ -20,7 +20,7 @@ public class PatrolAStar : State
 
         if(startNode == finalNode)
         {
-            enemy.StateMachine.ChangeState(new PatrolState(), enemy);
+            enemy.StateMachine.ChangeState(new PatrolState(), enemy); // Si el startNode yt el finalNode es el mismo nodo, vuelve a patrullar.
         }
 
         path = enemy.pathFinding.AStar(startNode, finalNode);
