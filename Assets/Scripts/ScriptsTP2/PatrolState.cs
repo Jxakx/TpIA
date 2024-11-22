@@ -63,7 +63,6 @@ public class PatrolState : State
         // Indica a las calaveras que tienen que hacer A* al punto donde me detectaron
         if (enemy.gameObject.name != GameManager.Instance.alertGameObject && GameManager.Instance.alertGameObject != "" && GameManager.Instance.skullsInTravel.Contains(enemy.gameObject) == true )
         {
-            Debug.Log("XXXXXX Entró a estrella XXXXXX");
             enemy.StateMachine.ChangeState(new PatrolAStar(), enemy);
         }
     }

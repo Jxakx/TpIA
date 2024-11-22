@@ -46,16 +46,20 @@ public class PlayerEnemies : MonoBehaviour
         StateMachine.Update(this);
     }
 
-    /// <summary>
-    /// Comprueba si el jugador está en el campo de visión.
-    /// </summary>
+
     public bool IsPlayerInSight()
     {
         Vector3 dirToPlayer = (_target.position - transform.position).normalized;
 
         if (Vector3.Angle(transform.forward, dirToPlayer) < viewAngle / 2)
         {
+            
             float distanceToPlayer = Vector3.Distance(transform.position, _target.position);
+
+            if(distanceToPlayer <= 0.7f)
+            {
+                StateMachine.ChangeState(new PatrolAStar(), this);
+            }
 
             if (distanceToPlayer <= viewRange &&
                 !Physics.Raycast(transform.position, dirToPlayer, distanceToPlayer, _obstacleMask))
@@ -67,9 +71,6 @@ public class PlayerEnemies : MonoBehaviour
         return false;
     }
 
-    /// <summary>
-    /// Movimiento hacia un objetivo con rotación.
-    /// </summary>
     public void MoveTowards(Vector3 targetPosition)
     {
         // Calcula la dirección hacia el objetivo
