@@ -141,7 +141,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f1f07b08f346dd438d24d47a9c9e36f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -67.2
+      value: -52.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f1f07b08f346dd438d24d47a9c9e36f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -177,7 +177,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7f1f07b08f346dd438d24d47a9c9e36f, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2608501106575013145, guid: 7f1f07b08f346dd438d24d47a9c9e36f, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -2773,17 +2773,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
-  _speed: 5
+  _speed: 10
   rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
   viewRange: 5
   viewAngle: 90
   _waypoints:
-  - {fileID: 962413992}
-  - {fileID: 1546160609}
   - {fileID: 752317737}
   - {fileID: 1998502284}
+  - {fileID: 962413992}
+  - {fileID: 1546160609}
   _path: []
   lastVisitedNode: {fileID: 0}
   funcionesPaths: {fileID: 36589404}
@@ -3664,7 +3664,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1abf712ed462ec6478e484c5320ee04f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -67.5
+      value: -52.7
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1abf712ed462ec6478e484c5320ee04f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3736,17 +3736,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _target: {fileID: 8846040465606918200}
-  _speed: 5
+  _speed: 10
   rotationSpeed: 5
   seekWeight: 0.5
   obstacleWeight: 0.743
   viewRange: 5
   viewAngle: 90
   _waypoints:
+  - {fileID: 962413992}
   - {fileID: 177837943}
   - {fileID: 1787623250}
   - {fileID: 1546160609}
-  - {fileID: 962413992}
   _path: []
   lastVisitedNode: {fileID: 0}
   funcionesPaths: {fileID: 36589404}
@@ -5294,7 +5294,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1e92e2996370b3a4dbbc469062824435, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2608501106575013145, guid: 1e92e2996370b3a4dbbc469062824435, type: 3}
       propertyPath: m_Materials.Array.data[0]
