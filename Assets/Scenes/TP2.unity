@@ -436,7 +436,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 23881652}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -952,7 +952,7 @@ MonoBehaviour:
   - {fileID: 1020280536}
   detectionRadius: 0
   previousNode: {fileID: 0}
-  cost: 1
+  cost: 164
 --- !u!1 &152481869
 GameObject:
   m_ObjectHideFlags: 0

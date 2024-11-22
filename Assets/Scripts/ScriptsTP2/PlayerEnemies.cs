@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class PlayerEnemies : MonoBehaviour
 {
@@ -56,16 +57,21 @@ public class PlayerEnemies : MonoBehaviour
             
             float distanceToPlayer = Vector3.Distance(transform.position, _target.position);
 
-            if(distanceToPlayer <= 0.5f) //Distancia de choque con el player
-            {
-                StateMachine.ChangeState(new PatrolState(), this); //Cambie el PatrolAStar por el PatrolState
-            }
-
             if (distanceToPlayer <= viewRange && !Physics.Raycast(transform.position, dirToPlayer, distanceToPlayer, _obstacleMask))
             {
-                return true;
+                return true; // El jugador está en línea de visión
             }
-        }
+
+            // Si no ve al jugador y detecta un obstáculo
+            if (Physics.Raycast(transform.position, dirToPlayer, out RaycastHit hit, viewRange, _obstacleMask))
+            {
+                if (((1 << hit.collider.gameObject.layer) & _obstacleMask) != 0 && distanceToPlayer > viewRange) // Verifica si el objeto impactado está en el obstacleMask
+                {
+                    StateMachine.ChangeState(new PatrolState(), this); // Cambia al estado de patrullaje
+                    return false;
+                }
+            }
+        }        
 
         return false;
     }

@@ -17,6 +17,12 @@ public class PatrolAStar : State
     {
         startNode = enemy.funcionesPaths.getClosestNode(enemy.transform.position);
         finalNode = enemy.funcionesPaths.getClosestNode(enemy.player.position);
+
+        if(startNode == finalNode)
+        {
+            enemy.StateMachine.ChangeState(new PatrolState(), enemy);
+        }
+
         path = enemy.pathFinding.AStar(startNode, finalNode);
         path.Reverse();
         Debug.Log("XXXXXXXXXXX" + enemy.gameObject.name + " Desde" + startNode.gameObject.name + " hasta " + finalNode.gameObject.name);
